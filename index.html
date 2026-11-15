@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI活用度診断｜Abierto Works</title>
+<meta name="description" content="12問・約2分。個人でのAIの使い方を100点満点で採点し、日本で上位何%か、あなたのレベルでAIにできることと次の一歩を表示します。登録不要・回答は送信されません。">
+<meta property="og:title" content="AI活用度診断｜あなたは日本で上位何%？">
+<meta property="og:description" content="相談相手からエージェント構築まで。個人のAI活用度を12問で診断し、レベル別に次の一歩を案内します。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday, encouraging, honest about estimates
+   IDEA a census sheet: 日本人100人の中のどこに自分がいるか、そして次の段
+   PICTURE 100-dot grid of Japan's 15+ population by AI tier; your dot ringed in pink
+   COLOUR ice ground, ink, hot pink for "you"; tiers as ink tints
+   TYPE Space Grotesk numerals + Noto Sans JP
+   LAYOUT laptop: intro left + dot grid right, quiz as one centred card, result in two columns; phone: stacked */
+:root{color-scheme:light dark;--bg:light-dark(#dff1f7,#06222e);--panel:light-dark(#ffffff,#0c3142);--ink:light-dark(#06222e,#e4f4f9);--mute:light-dark(#3f5f6b,#9dc0cc);--line:light-dark(#b9dbe6,#1d4a5c);--pink:#ff2e7e;--pinkink:light-dark(#c4004f,#ff6fa3);--t0:light-dark(#c6e1ea,#17414f);--t1:light-dark(#8cc3d3,#2c6a7e);--t2:light-dark(#3e8aa3,#5aa6bd);--t3:light-dark(#06222e,#e4f4f9)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.7 "Noto Sans JP",system-ui,sans-serif;overflow-x:clip}
+a{color:inherit}
+.band{padding-block:clamp(28px,4vw,60px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+.wrap{max-width:1180px;margin:0 auto}
+.brand{font:700 14px "Space Grotesk",sans-serif;letter-spacing:.02em;margin:0 0 18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand a{text-decoration:none}
+h1{font:900 clamp(32px,4.8vw,52px)/1.12 "Noto Sans JP",sans-serif;letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance}
+h2{font-size:clamp(22px,2.6vw,28px);line-height:1.3;margin:0 0 14px;text-wrap:balance}
+h3{font-size:17px;line-height:1.45;margin:0 0 6px}
+.lead{color:var(--mute);max-width:60ch;margin:0}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,56px);align-items:center}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 22px;padding:0;list-style:none}
+.facts li{background:var(--panel);border:1px solid var(--line);border-radius:30px;padding:4px 14px;font-size:14px;white-space:nowrap}
+.note{font-size:14px;background:var(--panel);border-left:4px solid var(--pink);border-radius:8px;padding:12px 14px;margin:0 0 22px;max-width:60ch}
+.btn{min-height:48px;padding:10px 22px;border-radius:12px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);font:700 16px "Noto Sans JP",sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.pink{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3vw,28px)}
+.cap{font-size:14px;font-weight:700;margin:0 0 8px}
+.dots{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:5px;margin:0 0 12px}
+.dots i{aspect-ratio:1;border-radius:50%;display:block}
+.dots i.me{outline:3px solid var(--pink);outline-offset:2px;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{outline-offset:5px}}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--mute);margin:0;padding:0;list-style:none}
+.legend b{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.src{font-size:13px;color:var(--mute);margin:10px 0 0}
+#quiz{max-width:760px;margin:0 auto}
+.prog{height:8px;background:var(--t0);border-radius:6px;overflow:hidden;margin:6px 0 18px}
+.prog div{height:100%;background:var(--pink);transition:width .25s}
+.qno{font:700 14px "Space Grotesk",sans-serif;color:var(--pinkink);display:flex;justify-content:space-between}
+.qt{font-size:clamp(20px,2.4vw,24px);line-height:1.45;margin:4px 0 6px;font-weight:900}
+.hint{font-size:14px;color:var(--mute);margin:0 0 14px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:10px 16px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:500 16px/1.45 "Noto Sans JP",sans-serif;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--ink)}
+.opt .mk{flex:none;width:22px;height:22px;border:2px solid var(--mute);border-radius:50%;display:grid;place-items:center}
+.opt.multi .mk{border-radius:6px}
+.opt[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.opt[aria-pressed=true] .mk{border-color:var(--pink);background:var(--pink)}
+.opt[aria-pressed=true] .mk::after{content:"";width:8px;height:8px;background:#fff;border-radius:2px}
+.opt small{display:block;font-size:13px;opacity:.75;font-weight:400}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.hidden{display:none!important}
+.res{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(18px,3vw,36px);align-items:start}
+.top{font:700 clamp(52px,8vw,86px)/1 "Space Grotesk",sans-serif;letter-spacing:-.03em;color:var(--pink);white-space:nowrap}
+.top small{font-size:.3em;color:var(--ink);letter-spacing:0;margin-right:6px;font-family:"Noto Sans JP",sans-serif;font-weight:700}
+.est{font-size:14px;color:var(--pinkink);font-weight:700;margin:6px 0 0}
+.lv{font-weight:900;font-size:clamp(24px,3vw,30px);margin:12px 0 4px;line-height:1.3}
+.meta{font-size:14px;color:var(--mute);margin:0}
+.bars{margin-top:18px;display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:7em minmax(0,1fr) 3em;gap:8px;align-items:center;font-size:14px}
+.bar .tr{height:10px;background:var(--t0);border-radius:5px;overflow:hidden}
+.bar .tr div{height:100%;background:var(--ink);border-radius:5px}
+.bar .v{text-align:right;font-family:"Space Grotesk",sans-serif;white-space:nowrap}
+.mirror{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.mirror .big{font:700 32px "Space Grotesk",sans-serif}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;list-style:none}
+.chips li{font-size:13px;padding:3px 10px;border-radius:20px;border:1px solid var(--line)}
+.chips li.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.blk{margin-bottom:22px}
+.blk ul,.blk ol{margin:6px 0 0;padding-left:1.3em}
+.blk li{margin-bottom:4px}
+.warn{background:var(--bg);border-radius:12px;padding:14px 16px;font-size:15px}
+.warn p{margin:0 0 6px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.msg{font-size:14px;color:var(--mute);margin-top:8px;min-height:1.4em}
+.comm{background:var(--ink);color:var(--bg)}
+.comm .lead{color:color-mix(in srgb,var(--bg) 78%,transparent)}
+.comm .card{background:color-mix(in srgb,var(--bg) 8%,var(--ink));border-color:color-mix(in srgb,var(--bg) 22%,transparent);color:var(--bg)}
+.comm .btn{background:var(--pink);border-color:var(--pink);color:#fff}
+.comm .btn.ghost{background:transparent;border-color:var(--bg);color:var(--bg)}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin-top:22px}
+.cg p{margin:0}
+.intro{font-size:14px;background:color-mix(in srgb,var(--bg) 12%,transparent);border-radius:10px;padding:10px 12px;margin-top:10px;overflow-wrap:anywhere}
+.ladder{display:grid;gap:0;margin-top:18px;border-top:1px solid var(--line)}
+.rung{display:grid;grid-template-columns:11em minmax(0,1fr) 12em;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.rung b{font-size:16px}
+.rung span{font-size:15px}
+.rung em{font-style:normal;text-align:right;font-size:13px;color:var(--mute)}
+.rung.me{background:color-mix(in srgb,var(--pink) 10%,transparent);box-shadow:inset 4px 0 0 var(--pink);padding-left:12px}
+.scroll{overflow-x:auto;margin-top:16px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num{text-align:right;font-family:"Space Grotesk",sans-serif;white-space:nowrap;font-size:16px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:20px;border:1px solid currentColor;white-space:nowrap}
+.tag.est{color:var(--pinkink)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px 32px;margin-top:22px;font-size:15px}
+.cols p,.cols ul{margin:0}
+.cols ul{padding-left:1.2em}
+footer{font-size:14px;color:var(--mute)}
+footer p{margin:0 0 6px}
+@media(prefers-reduced-motion:reduce){.dots i.me{animation:none}.prog div,.opt{transition:none}}
+@media(max-width:860px){.hero,.res{grid-template-columns:minmax(0,1fr)}.rung{grid-template-columns:minmax(0,1fr) auto}.rung span{grid-column:1/-1;order:3}}
+@media(max-width:600px){table{font-size:13px}th,td{padding:7px 4px}.stack thead{display:none}.stack tr{display:grid;padding-block:8px;border-bottom:1px solid var(--line)}.stack td{display:flex;justify-content:space-between;gap:12px;border:0;padding:3px 0}.stack td::before{content:attr(data-l);font-weight:700;flex:none}.dots{gap:3px}.facts li{font-size:13px}}
+</style>
+</head>
+<body>
+
+<section class="band" id="start"><div class="wrap">
+<p class="brand"><a href="./">Abierto Works ｜ AI活用度診断</a><a href="#ladder">レベル早見表</a></p>
+<div class="hero">
+<div>
+<h1>あなたのAI活用度は、<br>日本で上位何%？</h1>
+<p class="lead">相談相手として使う段階から、サイト制作、エージェント構築まで。あなたの<strong>個人での</strong>AIの使い方を100点満点で採点し、今のレベルでAIにできることと、次の一歩をお伝えします。</p>
+<ul class="facts"><li>全12問・約2分</li><li>登録不要</li><li>回答はどこにも送信されません</li></ul>
+<p class="note"><strong>答え方のルール</strong>：会社から支給されたAIを業務で使っているだけの場合は含めず、<strong>個人として自分で選び、使っているもの</strong>で答えてください。基準は「会社で使われているAIの仕組みを、個人でも使いこなせているか」です。</p>
+<button class="btn pink" type="button" id="go">診断をはじめる</button>
+</div>
+<div class="card">
+<p class="cap">日本人（15歳以上）を100人にすると</p>
+<div class="dots" id="d1" role="img" aria-label="日本人100人のAI利用の分布"></div>
+<ul class="legend">
+<li><b style="background:var(--t0)"></b>使ったことがない 41人</li>
+<li><b style="background:var(--t1)"></b>たまに使う 41人</li>
+<li><b style="background:var(--t2)"></b>ほぼ毎日 11人（推定）</li>
+<li><b style="background:var(--t3)"></b>コード生成まで 7人</li>
+</ul>
+<p class="src">出典：総務省『令和8年版 情報通信白書』。詳しくはページ下の「根拠」へ。</p>
+</div>
+</div>
+</div></section>
+
+<section class="band hidden" id="quiz" aria-live="polite">
+<div class="card">
+<div class="qno"><span id="qn">Q1 / 12</span><span id="qax"></span></div>
+<div class="prog"><div id="pg" style="width:0"></div></div>
+<p class="qt" id="qt"></p>
+<p class="hint" id="qh"></p>
+<div class="opts" id="qo"></div>
+<div class="nav">
+<button class="btn ghost" type="button" id="back">戻る</button>
+<button class="btn" type="button" id="next">次へ</button>
+</div>
+</div>
+</section>
+
+<section class="band hidden" id="result"><div class="wrap">
+<div class="res">
+<div class="card">
+<p class="cap">あなたのAI活用度</p>
+<div class="top" id="top"></div>
+<p class="est" id="est"></p>
+<p class="lv" id="lv"></p>
+<p class="meta" id="meta"></p>
+<div class="dots" id="d2" role="img" aria-label="100人の中のあなたの位置" style="margin-top:16px"></div>
+<div class="bars" id="bars"></div>
+<div class="mirror">
+<p class="cap">会社で使われているAIの仕組みを、個人で使えている数</p>
+<div class="big" id="mc"></div>
+<ul class="chips" id="mchips"></ul>
+</div>
+<div class="btns">
+<button class="btn" type="button" id="copy">結果をコピー</button>
+<a class="btn ghost" id="share" href="https://twitter.com/intent/tweet">Xでシェア</a>
+<button class="btn ghost" type="button" id="again">もう一度</button>
+</div>
+<p class="msg" id="msg" role="status"></p>
+</div>
+<div>
+<div class="blk"><h2 id="who"></h2><p id="whod" style="margin:0"></p></div>
+<div class="blk"><h3>このレベルで、AIにできること</h3><ul id="can"></ul></div>
+<div class="blk"><h3>次の一歩（今日からできる順）</h3><ol id="steps"></ol></div>
+<div class="blk warn"><p><strong>よくあるつまずき</strong></p><p id="fail"></p><p><strong>こうすれば抜けられる：</strong><span id="fix"></span></p></div>
+<div class="blk"><h3>次のレベルに上がると、できるようになること</h3><p id="unlock" style="margin:0"></p></div>
+</div>
+</div>
+</div></section>
+
+<section class="band comm" id="community"><div class="wrap">
+<h2>AIを学んでいる人と、これから学びたい人がつながる場所</h2>
+<p class="lead">一人で調べても、何から手をつければいいか分からないのがAIです。診断のレベルを名札にして、少し先を行く人に聞き、少し後ろの人に教える。そんな学び合いの場をLINEオープンチャットで開いています。</p>
+<div class="cg">
+<div class="card"><h3>学びたい人へ</h3><p>「何に使えばいい？」「この答え合ってる？」を気軽に質問できます。Lv0〜3の方、大歓迎です。</p></div>
+<div class="card"><h3>教えたい・一緒に作りたい人へ</h3><p>Lv4以上の方は、使い方の共有や、サイト・自動化を一緒に作る仲間として参加してください。教えることが一番の上達法です。</p></div>
+<div class="card"><h3 id="ctitle">参加のしかた</h3><p id="ctext">診断結果をコピーして、自己紹介に貼るだけ。匿名のニックネームで参加できます。</p><div class="intro hidden" id="introbox"></div>
+<div class="btns"><a class="btn" id="line" href="#community">LINEオープンチャットに参加</a><button class="btn ghost hidden" type="button" id="copyintro">自己紹介文をコピー</button></div>
+<p class="msg" id="lmsg"></p></div>
+</div>
+</div></section>
+
+<section class="band" id="ladder"><div class="wrap">
+<h2>レベル早見表：AIでできることは、こう広がる</h2>
+<p class="lead">右端は日本（15歳以上）でそのレベル以上にいる人のおおよその割合です。上位7%より上は公的統計がないため推定です。</p>
+<div class="ladder" id="rungs"></div>
+</div></section>
+
+<section class="band" id="basis" style="padding-top:0"><div class="wrap">
+<h2>「上位◯%」の根拠</h2>
+<p class="lead">公的統計で裏付けられるのは上位7%（コード生成AIの利用経験）まで。それより上は推定なので、細かい数字ではなく幅で表示します。</p>
+<div class="scroll">
+<table class="stack">
+<thead><tr><th>境界</th><th>人口に占める割合</th><th>根拠</th><th>種別</th></tr></thead>
+<tbody>
+<tr><td data-l="境界">生成AIを使ったことがある</td><td class="num" data-l="割合">58.8%</td><td data-l="根拠">総務省『令和8年版 情報通信白書』2025年度個人向け調査（日本・15歳以上）</td><td data-l="種別"><span class="tag">公的データ</span></td></tr>
+<tr><td data-l="境界">ほぼ毎日使う</td><td class="num" data-l="割合">約17.6%</td><td data-l="根拠">同白書「ほぼ毎日利用は約3割」を利用者内の比率とみなし、58.8%×0.3で換算</td><td data-l="種別"><span class="tag est">換算推定</span></td></tr>
+<tr><td data-l="境界">コード生成AIを使ったことがある</td><td class="num" data-l="割合">7.0%</td><td data-l="根拠">同白書 サービス種類別（GitHub Copilot等）</td><td data-l="種別"><span class="tag">公的データ</span></td></tr>
+<tr><td data-l="境界">自動化・エージェントを自作</td><td class="num" data-l="割合">約2%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag est">推定</span></td></tr>
+<tr><td data-l="境界">本番運用・複数エージェント</td><td class="num" data-l="割合">約0.5%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag est">推定</span></td></tr>
+<tr><td data-l="境界">評価・安全性・製品化まで</td><td class="num" data-l="割合">約0.1%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag est">推定</span></td></tr>
+</tbody></table>
+</div>
+<div class="cols">
+<div><h3>採点の考え方</h3><p>頻度・伝える力・見極める力・任せる力・つくる力の5つの軸で採点します。軸は、Rick Dakan氏とJoseph Feller氏によるAI Fluencyフレームワークの考え方（任せる・伝える・見極める・責任をもつ）を参考にしました。点数の節目に上の境界を置き、間は対数で補間しています。さらに「関門」として、毎日使っていなければ上位20%、コードに触れていなければ上位8%、自動化やエージェントの経験がなければ上位2.5%、AIが動く仕組みの運用経験がなければ上位1%、評価・安全性まで扱っていなければ上位0.2%より上には行きません。</p></div>
+<div><h3>この診断の限界</h3><ul><li>自己申告なので、甘めに答えると上振れします。</li><li>配点はAbierto Worksが設計したもので、統計的に検証された尺度ではありません。</li><li>白書の「ほぼ毎日 約3割」は母数が本文で明記されておらず、換算に不確実さがあります。</li></ul></div>
+<div><h3>出典</h3><ul><li><a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r08/pdf/n1110000.pdf">総務省 令和8年版 情報通信白書 第1部第1章第1節（PDF）</a></li><li><a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/html/nd112210.html">総務省 令和7年版 情報通信白書「個人におけるAI利用の現状」</a></li></ul></div>
+</div>
+</div></section>
+
+<footer class="band" style="padding-top:0"><div class="wrap">
+<p>運営：Abierto Works（株式会社Brifu）</p>
+<p>回答はお使いのブラウザの中だけで計算され、サーバーには送信・保存されません。</p>
+<p>本診断は自己評価の目安です。統計値は2026年11月時点で確認できた公的資料にもとづきます。</p>
+</div></footer>
+
+<script>
+{
+/* ===== 設定：LINEオープンチャットの招待URLをここに入れてください ===== */
+const LINE_URL = "";
+
+const MIRROR = ["有料AIを自分で契約","自分専用の指示・知識を入れたAI","会議・音声の自動議事録","自分の資料を検索して答えるAI","フォーム・メール・表の自動処理","決まった時間に自動で動くAI","外部ツールとつながったAIエージェント","AIで作ったサイト・アプリの公開","AI利用の自分ルール（情報管理）"];
+const Q=[
+{id:"freq",ax:"頻度",t:"個人として、生成AI（ChatGPT・Claude・Geminiなど）をどれくらい使いますか？",o:[["使ったことがない",0],["試したことがある程度",2],["月に数回",4],["週に数回",7],["ほぼ毎日",10],["1日中ずっと開いている",12]]},
+{id:"hours",ax:"頻度",t:"1週間で、合計どれくらい使っていますか？",o:[["1時間未満",0],["1〜5時間",3],["5〜15時間",6],["15〜30時間",8],["30時間以上",10]]},
+{id:"use",ax:"頻度",multi:1,cap:14,t:"個人で、やったことがあるものを全部選んでください",h:"複数選択できます",o:[["相談・壁打ち・「これってどう？」",2],["調べ物",1],["文章作成・要約・翻訳",2],["写真や画面を見せて説明してもらう",2],["画像・動画・音楽の生成",2],["家計・旅行・学習などの計画づくり",2],["データ分析・表計算",3]]},
+{id:"mirror",ax:"任せる力",multi:1,cap:24,t:"会社で使われているAIの仕組みのうち、個人でも自分で用意して使っているものは？",h:"会社支給のものは除きます。複数選択できます",o:[["有料のAIを自分で契約している",2,"会社でいう全社AIアシスタント"],["自分専用の指示や知識を入れたAI（GPTs・Gem・Projects等）",3,"会社でいう社内特化AI"],["会議や音声の自動文字起こし→要約",2,"会社でいう議事録AI"],["自分の資料を読み込ませて検索・回答させるAI（NotebookLM等）",3,"会社でいう社内ナレッジ検索"],["フォーム・メール・表をAIで自動処理（GAS・Zapier・Make等）",4,"会社でいうワークフロー自動化",["agent"]],["決まった時間に自動で動くAIタスク",4,"会社でいう定期バッチ",["agent"]],["外部ツールとつながったAIエージェント（MCP・コネクタ等）",5,"会社でいうAIエージェント",["agent"]],["AIで作ったWebサイト・アプリを公開・運用",4,"会社でいう社内システム開発",["code"]],["AI利用の自分ルールがある（入れない情報・確認手順）",2,"会社でいうAIガバナンス"]]},
+{id:"prompt",ax:"伝える力",t:"AIへの頼み方（指示の出し方）は？",o:[["ひと言で聞く",0],["条件や背景を付け足す",2],["目的・前提・制約・出力形式まで整理して頼む",4],["うまくいった指示をテンプレにして使い回している",6],["資料・ツール・記憶など、AIに渡す情報ごと設計している",8]]},
+{id:"verify",ax:"見極める力",t:"AIの答えをどう扱っていますか？",o:[["そのまま使う",0],["違和感があれば確認する",2],["数字・固有名詞・法律などは一次情報で裏を取る",4],["別のAIやテストで確かめる仕組みがある",6]]},
+{id:"privacy",ax:"見極める力",t:"AIに入れる情報について、気をつけていることは？",o:[["特に意識していない",0],["なんとなく気をつけている",1],["個人情報やパスワードは入れないと決めている",3],["設定（学習に使われない設定など）まで確認している",4]]},
+{id:"deleg",ax:"任せる力",t:"AIにどこまで作業を任せていますか？",o:[["任せていない",0],["下書き・アイデア出し",2],["作業のひとまとまりを丸ごと",4],["複数の工程を続けて任せている",6],["自分が寝ている間も回る仕組みがある",8,["agent"]]]},
+{id:"dev",ax:"つくる力",t:"AIを使って、何かを「つくる」ことはありますか？",o:[["コードやツールづくりはしない",0],["AIが書いたコードを動かしたことがある",3,["code"]],["Claude Code・Cursor等で日常的に開発している",6,["code"]],["AIが中で動く仕組み（チャットボット・自動処理など）を公開・運用している",8,["code","agent","prod"]],["AIの評価・安全性（脱獄対策など）まで扱う",10,["code","agent","prod","eval"]]]},
+{id:"pay",ax:"つくる力",t:"個人としてのAIへの出費は？",o:[["無料のみ",0],["有料プランを1つ",2],["有料プランを複数",4],["API従量課金も含め月1万円以上",6]]},
+{id:"spread",ax:"伝える力",t:"AIの使い方を、誰かに伝えていますか？",o:[["自分だけで使っている",0],["家族や友人に教えたことがある",2],["SNSや勉強会で発信している",4],["講座・コンサル・作品として提供している",6]]},
+{id:"role",ax:null,t:"AIを一緒に学ぶ場があったら、どう関わりたいですか？",h:"採点には含みません。結果の案内に使います",o:[["学びたい",0],["教えたい・一緒に作りたい",0],["どちらも",0],["今は見るだけ",0]]}];
+const A=[[0,100],[3,58.8],[25,17.6],[45,7],[62,2],[75,.5],[88,.1],[100,.01]];
+const LV=[
+{s:0,n:"Lv0 未接触",p:100,r:"約41%",d:"まだAIに触れていない段階。日本の15歳以上の約4割がここにいます。遅れではなく、これから一番伸びしろがある場所です。",can:["「冷蔵庫に卵と玉ねぎがある。夕飯3案」と聞くと、作り方まで出てくる","長いお知らせを「3行で」と頼むと要約してくれる","言いにくい断りのメッセージを、やわらかい言葉に整えてくれる"],st:["ChatGPT・Claude・Geminiのどれか1つを無料で入れる","今日の困りごとを1つ、話し言葉のまま聞いてみる","答えに「なぜ？」「もっと簡単に」と続けて聞く"],f:"何を聞けばいいか分からず、アプリを入れたまま開かない。",x:"検索窓に打つ言葉の代わりに「〇〇について初心者向けに教えて」と送るだけで十分です。",u:"調べ物や文章の下書きを、検索より速く片付けられるようになります。"},
+{s:1,n:"Lv1 お試し",p:58.8,r:"上位58.8%",d:"触ったことはあるけれど、まだ生活には入っていない段階です。",can:["分からない言葉を、会話しながら自分の理解度に合わせて説明してもらう","メールや案内文の下書きを数秒で作る","写真を見せて「これは何？」「どう直す？」と聞く"],st:["1週間だけ「調べる前にAIに聞く」をルールにする","スマホのホーム画面の1ページ目に置く","音声入力で話しかけてみる"],f:"一度おかしな答えが出て「使えない」と離れてしまう。",x:"聞き方を変えて2〜3回やり直すのが普通です。条件を足すほど精度が上がります。",u:"相談相手として、考えを整理したり比較したりできるようになります。"},
+{s:10,n:"Lv2 相談相手",p:58.8,r:"上位58.8%以内",d:"壁打ち・調べ物の相手としてAIを使えている段階です。",can:["迷っていることを話して、選択肢と判断基準を整理してもらう","商品やプランの比較表を作らせる","旅行・家計・学習の計画を一緒に立てる"],st:["「目的・前提・制約・出力形式」の4点を書いて頼む","最後に「足りない情報があれば先に質問して」と付ける","うまくいった頼み方をメモに保存する"],f:"もっともらしい答えを、そのまま信じてしまう。",x:"数字・固有名詞・法律・医療は、必ず公式サイトなど一次情報で確かめます。",u:"毎日の道具として、資料の読み込みや画像づくりまで任せられます。"},
+{s:22,n:"Lv3 日常ツール",p:17.6,r:"上位17.6%前後（換算推定）",d:"AIが毎日の道具になっている段階。日本では上位2割前後（推定）です。",can:["長いPDFや説明書を読み込ませて、知りたいところだけ質問する","チラシやSNS画像の案を画像生成で何パターンも作る","音声メモから議事録や日記を作る"],st:["自分専用AI（Projects・GPTs・Gem）に、いつもの指示を保存する","NotebookLMなどで自分の資料を検索できるようにする","有料プランを1か月だけ試し、無料版との差を体感する"],f:"ツールを増やしすぎて、どれに何を入れたか分からなくなる。",x:"メインを1つ、用途別を1つに絞り、使う場面を決めます。",u:"仕事の成果物を作り、簡単なコードやページもAIと作れるようになります。"},
+{s:35,n:"Lv4 仕事の相棒",p:17.6,r:"上位7〜17.6%",d:"AIに作業を任せ、成果に結びつけている段階です。",can:["企画書やLPの構成から文章まで、一緒に仕上げる","表計算の関数やデータの傾向分析を任せる","簡単なWebページのコードを書かせて動かす"],st:["AIに1ページのサイトを作らせ、GitHub Pagesなどで公開してみる","毎週くり返す作業を1つ、GASやZapierで自動化する","出力を確かめるチェックリストを作る"],f:"毎回ゼロから頼み、品質も時間も安定しない。",x:"良かったやり取りをテンプレにし、確認項目とセットで使い回します。",u:"サイト・ツール・自動化を自分の手で作れるようになります。"},
+{s:48,n:"Lv5 ビルダー",p:7,r:"上位7%以内",d:"サイト・ツール・自動化を自分で作れる段階。コード生成まで使う人は日本で約7%です。",can:["自分のサイト・診断・ツールを作って公開する","フォーム→表→メールの流れを自動化する","Claude Codeなどでアプリを開発する"],st:["AIを外部サービスとつなぐ（MCP・コネクタ）","決まった時間に自動で動くタスクを1つ作る","作ったものを人に使ってもらい、感想をもらう"],f:"作って満足し、誰にも使われないまま止まる。",x:"作る前に「誰が・いつ使い・誰が直すか」を決めておきます。",u:"AIに道具を持たせ、複数の工程を自律的に進めさせられます。"},
+{s:62,n:"Lv6 エージェント設計者",p:2,r:"上位2%前後（推定）",d:"AIに道具を持たせ、自分の代わりに動かす設計ができる段階です（推定で上位2%前後）。",can:["調査→整理→下書きを、AIが続けて自動で進める","寝ている間に情報収集やレポート作成が終わっている","メール・カレンダー・表計算をまたぐ作業を代行させる"],st:["AIに渡す権限と、人が確認するポイントを決める","出力の合格基準（テスト）を作り、毎回チェックさせる","利用料金とログを見える化する"],f:"任せすぎて、誤送信やデータ消失が起きる。",x:"送信・削除・支払いなど取り消せない操作の前に、人の承認を必ず挟みます。",u:"複数のエージェントを並べて動かし、本番運用まで扱えます。"},
+{s:75,n:"Lv7 ハッカー",p:.5,r:"上位0.5%前後（推定）",d:"複数エージェントの運用や、AIを組み込んだ仕組みの運用まで扱う段階です（推定で上位0.5%前後）。",can:["複数のAIエージェントを並べて動かし、仕事を分担させる","APIで自作の仕組みにAIを組み込む","自分専用の検索AI（RAG）やローカルLLMを構築する"],st:["プロンプトインジェクション（AIへの不正な指示）の対策を入れる","評価（eval）を自動化し、改善を数字で追う","知見を発信し、教える側に回る"],f:"自分しか分からない仕組みになり、止まると誰も直せない。",x:"仕組みの説明書と引き継ぎ手順を書き、他の人が動かせる状態にします。",u:"評価・安全性・製品化まで扱い、他の人の到達点を引き上げる側に回れます。"},
+{s:88,n:"Lv8 フロンティア",p:.1,r:"上位0.1%前後（推定）",d:"評価・安全性・製品化まで踏み込む、ごく少数の段階です（推定で上位0.1%前後）。",can:["AIの出力品質や安全性を、仕組みとして検証する","AIを使ったサービスや講座を提供する","最新の研究や機能を、すぐ実務に落とし込む"],st:["コミュニティで教える側に立つ","作った仕組みや知見をオープンに公開する","Lv0〜2の人にも伝わる言葉で説明する練習をする"],f:"専門用語ばかりになり、これから学ぶ人を置き去りにする。",x:"「冷蔵庫の残り物で献立」くらいの身近な例から話します。",u:"ここが今の最上段です。次は、あなたが誰かの次の一歩をつくる番です。"}];
+
+const $=id=>document.getElementById(id);
+const ans={};let cur=0;
+const tierA=n=>n<41?"--t0":n<82?"--t1":n<93?"--t2":"--t3";
+const paint=(el,me)=>{el.innerHTML=Array.from({length:100},(_,k)=>`<i class="${k===me?"me":""}" style="background:var(${tierA(k)})"></i>`).join("")};
+paint($("d1"),-1);
+
+$("rungs").innerHTML=LV.map((l,i)=>`<div class="rung" id="r${i}"><b>${l.n}</b><span>${l.can[0]}。${l.can[1]}。</span><em>${l.r}</em></div>`).join("");
+
+const isSel=(q,j)=>q.multi?(ans[q.id]||[]).includes(j):ans[q.id]===j;
+const render=()=>{
+const q=Q[cur];
+$("qn").textContent=`Q${cur+1} / ${Q.length}`;
+$("qax").textContent=q.ax||"アンケート";
+$("pg").style.width=(cur/Q.length*100)+"%";
+$("qt").textContent=q.t;
+$("qh").textContent=q.h||(q.multi?"":"選ぶと次へ進みます");
+$("qo").innerHTML=q.o.map((o,j)=>`<button type="button" class="opt${q.multi?" multi":""}" data-j="${j}" aria-pressed="${isSel(q,j)}"><span class="mk"></span><span>${o[0]}${o[2]&&typeof o[2]==="string"?`<small>${o[2]}</small>`:""}</span></button>`).join("");
+$("back").disabled=cur===0;
+$("next").textContent=cur===Q.length-1?"結果を見る":"次へ";
+$("next").classList.toggle("hidden",!q.multi&&ans[q.id]===undefined);
+};
+$("qo").addEventListener("click",e=>{
+const b=e.target.closest(".opt");if(!b)return;
+const q=Q[cur],j=+b.dataset.j;
+if(q.multi){const a=ans[q.id]||[];ans[q.id]=a.includes(j)?a.filter(x=>x!==j):[...a,j];render();return}
+ans[q.id]=j;render();
+setTimeout(()=>advance(),220);
+});
+const advance=()=>{if(cur<Q.length-1){cur++;render();$("quiz").scrollIntoView({block:"start"})}else finish()};
+$("next").addEventListener("click",()=>{const q=Q[cur];if(q.multi&&!ans[q.id])ans[q.id]=[];advance()});
+$("back").addEventListener("click",()=>{if(cur>0){cur--;render()}});
+$("go").addEventListener("click",()=>{$("start").classList.add("hidden");$("result").classList.add("hidden");$("quiz").classList.remove("hidden");cur=0;render();$("quiz").scrollIntoView({block:"start"})});
+$("again").addEventListener("click",()=>{Object.keys(ans).forEach(k=>delete ans[k]);$("result").classList.add("hidden");$("start").classList.remove("hidden");$("start").scrollIntoView({block:"start"})});
+
+const interp=s=>{for(let i=1;i<A.length;i++){if(s<=A[i][0]){const[a,pa]=A[i-1],[b,pb]=A[i];const t=(s-a)/(b-a);return Math.exp(Math.log(pa)+t*(Math.log(pb)-Math.log(pa)))}}return .01};
+const fmt=p=>p>=10?p.toFixed(0):p.toFixed(1);
+let shareText="",introText="";
+
+const score=()=>{
+let raw=0,max=0;const ax={},axm={};const flags=new Set();
+Q.forEach(q=>{if(!q.ax)return;const m=q.multi?q.cap:Math.max(...q.o.map(o=>o[1]));max+=m;axm[q.ax]=(axm[q.ax]||0)+m;
+const sel=q.multi?(ans[q.id]||[]):ans[q.id]===undefined?[]:[ans[q.id]];
+let p=sel.reduce((s,j)=>s+q.o[j][1],0);if(q.multi)p=Math.min(p,q.cap);
+sel.forEach(j=>{const o=q.o[j];const fl=Array.isArray(o[2])?o[2]:Array.isArray(o[3])?o[3]:[];fl.forEach(f=>flags.add(f))});
+raw+=p;ax[q.ax]=(ax[q.ax]||0)+p});
+const S=Math.round(raw/max*100);
+const fr=ans.freq??0;
+let top=fr===0?100:interp(Math.max(S,3));
+if(fr<4)top=Math.max(top,20);
+if(!flags.has("code"))top=Math.max(top,8);
+if(!flags.has("agent"))top=Math.max(top,2.5);
+if(!flags.has("prod"))top=Math.max(top,1);
+if(!flags.has("eval"))top=Math.max(top,.2);
+let li=fr===0?0:LV.reduce((a,l,i)=>S>=l.s&&i>0?i:a,1);
+while(li>0&&LV[li].p<top-1e-9&&li>1)li--;
+return {S,top,ax,axm,li,fr};
+};
+
+const finish=()=>{
+const r=score();const L=LV[r.li];
+const band=r.fr===0?null:r.top>=7?null:r.top>=2?"2〜7%":r.top>=.5?"0.5〜2%":r.top>=.1?"0.1〜0.5%":"0.1%以内";
+const ptxt=r.fr===0?"未使用層（約41%）":band?`上位${band}（推定）`:`上位${fmt(r.top)}%`;
+$("top").innerHTML=r.fr===0?"<small>未使用層</small>41%":`<small>上位</small>${band||fmt(r.top)+"%"}`;
+$("est").textContent=band?"公的統計がない推定ゾーンのため、幅で表示しています":(r.fr!==0&&r.top<17.6&&r.top>=7)?"17.6%の線は白書からの換算推定を含みます":"";
+$("lv").textContent=L.n;
+$("meta").textContent=`スコア ${r.S} / 100`;
+const rank=r.fr===0?20:Math.min(99,Math.max(0,Math.round(100-r.top)));
+paint($("d2"),rank);
+$("bars").innerHTML=Object.keys(r.axm).map(k=>{const v=Math.round(r.ax[k]/r.axm[k]*100);return`<div class="bar"><span>${k}</span><div class="tr"><div style="width:${v}%"></div></div><span class="v">${v}%</span></div>`}).join("");
+const mm=ans.mirror||[];
+$("mc").textContent=`${mm.length} / ${MIRROR.length}`;
+$("mchips").innerHTML=MIRROR.map((m,i)=>`<li class="${mm.includes(i)?"on":""}">${m}</li>`).join("");
+$("who").textContent=L.n;$("whod").textContent=L.d;
+$("can").innerHTML=L.can.map(c=>`<li>${c}</li>`).join("");
+$("steps").innerHTML=L.st.map(c=>`<li>${c}</li>`).join("");
+$("fail").textContent=L.f;$("fix").textContent=L.x;$("unlock").textContent=L.u;
+document.querySelectorAll(".rung").forEach((el,i)=>el.classList.toggle("me",i===r.li));
+const url=location.href.split("#")[0];
+shareText=`AI活用度診断の結果：${L.n}／スコア${r.S}点／日本（15歳以上）で${ptxt}`;
+$("share").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(shareText)+"&url="+encodeURIComponent(url);
+const role=["学ぶ側","教える側・一緒に作る側","学ぶ側と教える側の両方","まずは見学"][ans.role??3];
+introText=`はじめまして！AI活用度診断は「${L.n}」（${ptxt}）でした。${role}として参加します。よろしくお願いします。`;
+$("ctitle").textContent="あなたの自己紹介文";
+$("ctext").textContent="下の文をコピーして、参加後の自己紹介に貼ってください。";
+$("introbox").textContent=introText;$("introbox").classList.remove("hidden");$("copyintro").classList.remove("hidden");
+$("pg").style.width="100%";
+$("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("result").scrollIntoView({block:"start"});
+};
+
+const copy=async(t,el)=>{try{await navigator.clipboard.writeText(t);el.textContent="コピーしました"}catch(e){el.textContent=t}};
+$("copy").addEventListener("click",()=>copy(shareText,$("msg")));
+$("copyintro").addEventListener("click",()=>copy(introText,$("lmsg")));
+const line=$("line");
+if(LINE_URL){line.href=LINE_URL;line.target="_blank";line.rel="noopener"}
+else{line.removeAttribute("href");line.setAttribute("aria-disabled","true");line.style.opacity=".5";line.textContent="LINEオープンチャット（近日公開）";$("lmsg").textContent="参加URLは準備中です。公開までもう少しお待ちください。"}
+}
+</script>
+</body>
+</html>
