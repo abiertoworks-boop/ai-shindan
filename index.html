@@ -3,137 +3,202 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI活用度診断｜Abierto Works</title>
+<title>AI活用度診断｜アビエルトワークス</title>
 <meta name="description" content="12問・約2分。個人でのAIの使い方を100点満点で採点し、日本で上位何%か、あなたのレベルでAIにできることと次の一歩を表示します。登録不要・回答は送信されません。">
 <meta property="og:title" content="AI活用度診断｜あなたは日本で上位何%？">
 <meta property="og:description" content="相談相手からエージェント構築まで。個人のAI活用度を12問で診断し、レベル別に次の一歩を案内します。">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#03060d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-/* VOICE everyday, encouraging, honest about estimates
-   IDEA a census sheet: 日本人100人の中のどこに自分がいるか、そして次の段
-   PICTURE 100-dot grid of Japan's 15+ population by AI tier; your dot ringed in pink
-   COLOUR ice ground, ink, hot pink for "you"; tiers as ink tints
+/* VOICE occasion-like self check, sci-fi but readable
+   IDEA a holographic projector in deep space: the result materialises above an emitter
+   PICTURE the floating hologram (big percentile + level pyramid) rising out of a light cone
+   COLOUR space #03060d, holo cyan #5ff6ff, pink #ff7eb9 marks "you", amber for estimates (EQ Platform palette)
    TYPE Space Grotesk numerals + Noto Sans JP
-   LAYOUT laptop: intro left + dot grid right, quiz as one centred card, result in two columns; phone: stacked */
-:root{color-scheme:light dark;--bg:light-dark(#dff1f7,#06222e);--panel:light-dark(#ffffff,#0c3142);--ink:light-dark(#06222e,#e4f4f9);--mute:light-dark(#3f5f6b,#9dc0cc);--line:light-dark(#b9dbe6,#1d4a5c);--pink:#ff2e7e;--pinkink:light-dark(#c4004f,#ff6fa3);--t0:light-dark(#c6e1ea,#17414f);--t1:light-dark(#8cc3d3,#2c6a7e);--t2:light-dark(#3e8aa3,#5aa6bd);--t3:light-dark(#06222e,#e4f4f9)}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+   LAYOUT laptop: hero text + holo dot grid; result = hologram left, details right; 8 panels in a row. phone: stacked, panels become an accordion */
+:root{color-scheme:dark;--bg:#03060d;--ink:#e8f2ff;--mute:#9db2c9;--line:rgba(95,246,255,.2);--holo:#5ff6ff;--pink:#ff7eb9;--amber:#ffb547;--glass:rgba(8,22,38,.62);--t0:#18283b;--t1:#2b6f86;--t2:#3fb5cc;--t3:#5ff6ff}
 *{box-sizing:border-box;min-width:0}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:16px/1.7 "Noto Sans JP",system-ui,sans-serif;overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font:16px/1.75 "Noto Sans JP",system-ui,sans-serif;overflow-x:clip}
 a{color:inherit}
-.band{padding-block:clamp(28px,4vw,60px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
+#space{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.glow-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(60% 45% at 80% 10%,rgba(95,246,255,.10),transparent 70%),radial-gradient(50% 40% at 10% 90%,rgba(255,126,185,.07),transparent 70%)}
+main,footer{position:relative;z-index:1}
+.band{padding-block:clamp(36px,5vw,80px);padding-left:max(5vw,16px);padding-right:max(5vw,16px)}
 .wrap{max-width:1180px;margin:0 auto}
-.brand{font:700 14px "Space Grotesk",sans-serif;letter-spacing:.02em;margin:0 0 18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font:500 14px "Space Grotesk",sans-serif;margin:0 0 22px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--mute)}
 .brand a{text-decoration:none}
-h1{font:900 clamp(32px,4.8vw,52px)/1.12 "Noto Sans JP",sans-serif;letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance}
-h2{font-size:clamp(22px,2.6vw,28px);line-height:1.3;margin:0 0 14px;text-wrap:balance}
-h3{font-size:17px;line-height:1.45;margin:0 0 6px}
-.lead{color:var(--mute);max-width:60ch;margin:0}
+.brand b{color:var(--holo);font-weight:700}
+h1{font:900 clamp(32px,4.8vw,54px)/1.15 "Noto Sans JP",sans-serif;letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}
+h1 .hl{color:var(--holo);text-shadow:0 0 24px rgba(95,246,255,.45)}
+h2{font-size:clamp(23px,2.8vw,30px);line-height:1.35;margin:0 0 14px;text-wrap:balance}
+h3{font-size:17px;line-height:1.5;margin:0 0 6px}
+.lead{color:var(--mute);max-width:62ch;margin:0}
 .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(24px,4vw,56px);align-items:center}
-.facts{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 22px;padding:0;list-style:none}
-.facts li{background:var(--panel);border:1px solid var(--line);border-radius:30px;padding:4px 14px;font-size:14px;white-space:nowrap}
-.note{font-size:14px;background:var(--panel);border-left:4px solid var(--pink);border-radius:8px;padding:12px 14px;margin:0 0 22px;max-width:60ch}
-.btn{min-height:48px;padding:10px 22px;border-radius:12px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);font:700 16px "Noto Sans JP",sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-.btn.ghost{background:transparent;color:var(--ink)}
-.btn.pink{background:var(--pink);border-color:var(--pink);color:#fff}
-.btn[disabled]{opacity:.45;cursor:not-allowed}
-.btn:focus-visible,.opt:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3vw,28px)}
-.cap{font-size:14px;font-weight:700;margin:0 0 8px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 22px;padding:0;list-style:none}
+.facts li{border:1px solid var(--line);background:var(--glass);border-radius:30px;padding:4px 14px;font-size:14px;white-space:nowrap}
+.note{font-size:14.5px;background:var(--glass);border:1px solid var(--line);border-left:3px solid var(--pink);border-radius:10px;padding:12px 16px;margin:0 0 24px;max-width:62ch}
+.btn{position:relative;min-height:50px;padding:11px 24px;border-radius:12px;border:1px solid var(--holo);background:rgba(95,246,255,.1);color:var(--ink);font:700 16px "Noto Sans JP",sans-serif;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,box-shadow .2s,transform .2s}
+.btn:hover{background:rgba(95,246,255,.2);box-shadow:0 0 22px rgba(95,246,255,.35)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.main{background:var(--holo);color:#02121c;border-color:var(--holo);box-shadow:0 0 28px rgba(95,246,255,.4)}
+.btn.main:hover{background:#9ffaff}
+.btn.line{background:#06c755;border-color:#06c755;color:#fff;box-shadow:0 0 24px rgba(6,199,85,.35)}
+.btn.line:hover{background:#05b34c}
+.btn:focus-visible,.opt:focus-visible,.pn:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3vw,28px);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);position:relative;overflow:hidden}
+.card.scan::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(95,246,255,.045) 0 1px,transparent 1px 3px)}
+.cap{font-size:14px;font-weight:700;margin:0 0 10px}
 .dots{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:5px;margin:0 0 12px}
-.dots i{aspect-ratio:1;border-radius:50%;display:block}
-.dots i.me{outline:3px solid var(--pink);outline-offset:2px;animation:pulse 1.4s ease-in-out infinite}
-@keyframes pulse{50%{outline-offset:5px}}
+.dots i{aspect-ratio:1;border-radius:50%;display:block;opacity:0;transform:scale(.3);animation:dotIn .5s ease forwards}
+@keyframes dotIn{to{opacity:1;transform:none}}
 .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--mute);margin:0;padding:0;list-style:none}
 .legend b{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
 .src{font-size:13px;color:var(--mute);margin:10px 0 0}
-#quiz{max-width:760px;margin:0 auto}
-.prog{height:8px;background:var(--t0);border-radius:6px;overflow:hidden;margin:6px 0 18px}
-.prog div{height:100%;background:var(--pink);transition:width .25s}
-.qno{font:700 14px "Space Grotesk",sans-serif;color:var(--pinkink);display:flex;justify-content:space-between}
-.qt{font-size:clamp(20px,2.4vw,24px);line-height:1.45;margin:4px 0 6px;font-weight:900}
+#quiz .wrap{max-width:780px}
+.prog{height:6px;background:var(--t0);border-radius:6px;overflow:hidden;margin:6px 0 20px}
+.prog div{height:100%;background:linear-gradient(90deg,var(--holo),var(--pink));box-shadow:0 0 12px var(--holo);transition:width .3s}
+.qno{font:700 14px "Space Grotesk",sans-serif;color:var(--holo);display:flex;justify-content:space-between}
+.qt{font-size:clamp(20px,2.4vw,24px);line-height:1.5;margin:4px 0 6px;font-weight:900}
 .hint{font-size:14px;color:var(--mute);margin:0 0 14px}
-.opts{display:grid;gap:8px}
-.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:10px 16px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:500 16px/1.45 "Noto Sans JP",sans-serif;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
-.opt:hover{border-color:var(--ink)}
+.opts{display:grid;gap:9px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(3,10,20,.55);color:var(--ink);font:500 16px/1.5 "Noto Sans JP",sans-serif;text-align:left;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s;animation:optIn .35s ease both}
+.opt:hover{border-color:var(--holo);box-shadow:0 0 16px rgba(95,246,255,.18)}
 .opt .mk{flex:none;width:22px;height:22px;border:2px solid var(--mute);border-radius:50%;display:grid;place-items:center}
 .opt.multi .mk{border-radius:6px}
-.opt[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.opt[aria-pressed=true] .mk{border-color:var(--pink);background:var(--pink)}
-.opt[aria-pressed=true] .mk::after{content:"";width:8px;height:8px;background:#fff;border-radius:2px}
-.opt small{display:block;font-size:13px;opacity:.75;font-weight:400}
-.nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.opt[aria-pressed=true]{background:rgba(95,246,255,.14);border-color:var(--holo);box-shadow:0 0 18px rgba(95,246,255,.25)}
+.opt[aria-pressed=true] .mk{border-color:var(--holo);background:var(--holo)}
+.opt[aria-pressed=true] .mk::after{content:"";width:8px;height:8px;background:#02121c;border-radius:2px}
+.opt small{display:block;font-size:13px;color:var(--mute);font-weight:400}
+@keyframes optIn{from{opacity:0;transform:translateY(8px)}}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}
 .hidden{display:none!important}
-.res{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(18px,3vw,36px);align-items:start}
-.top{font:700 clamp(52px,8vw,86px)/1 "Space Grotesk",sans-serif;letter-spacing:-.03em;color:var(--pink);white-space:nowrap}
-.top small{font-size:.3em;color:var(--ink);letter-spacing:0;margin-right:6px;font-family:"Noto Sans JP",sans-serif;font-weight:700}
-.est{font-size:14px;color:var(--pinkink);font-weight:700;margin:6px 0 0}
-.lv{font-weight:900;font-size:clamp(24px,3vw,30px);margin:12px 0 4px;line-height:1.3}
-.meta{font-size:14px;color:var(--mute);margin:0}
-.bars{margin-top:18px;display:grid;gap:8px}
-.bar{display:grid;grid-template-columns:7em minmax(0,1fr) 3em;gap:8px;align-items:center;font-size:14px}
-.bar .tr{height:10px;background:var(--t0);border-radius:5px;overflow:hidden}
-.bar .tr div{height:100%;background:var(--ink);border-radius:5px}
-.bar .v{text-align:right;font-family:"Space Grotesk",sans-serif;white-space:nowrap}
-.mirror{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
-.mirror .big{font:700 32px "Space Grotesk",sans-serif}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;list-style:none}
-.chips li{font-size:13px;padding:3px 10px;border-radius:20px;border:1px solid var(--line)}
-.chips li.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.res{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,48px);align-items:start}
+.stage{position:relative;perspective:1200px;padding:8px 0 64px}
+.emitter{position:absolute;left:12%;right:12%;bottom:18px;height:34px;border-radius:50%;background:radial-gradient(closest-side,rgba(95,246,255,.95),rgba(95,246,255,.35) 45%,transparent);filter:blur(1px);animation:pulse 2.6s ease-in-out infinite}
+.emitter::after{content:"";position:absolute;left:18%;right:18%;top:40%;height:14px;border-radius:50%;background:#bffcff;filter:blur(4px)}
+.base{position:absolute;left:20%;right:20%;bottom:0;height:30px;border-radius:50%;background:linear-gradient(#1b3046,#08121e);border:1px solid rgba(95,246,255,.35);box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.cone{position:absolute;left:0;right:0;bottom:34px;top:8%;clip-path:polygon(40% 100%,60% 100%,100% 0,0 0);background:linear-gradient(0deg,rgba(95,246,255,.32),rgba(95,246,255,.06) 60%,transparent);mix-blend-mode:screen;animation:shimmer 3.2s ease-in-out infinite;pointer-events:none}
+.mote{position:absolute;bottom:40px;width:3px;height:3px;border-radius:50%;background:var(--holo);box-shadow:0 0 6px var(--holo);animation:rise 4s linear infinite;opacity:0}
+.holo{position:relative;margin:0 auto;max-width:520px;transform-style:preserve-3d;transform:rotateX(var(--rx,8deg)) rotateY(var(--ry,0deg));transition:transform .4s ease-out}
+.holo .float{animation:float 6s ease-in-out infinite}
+.hp{position:relative;border:1px solid rgba(95,246,255,.55);border-radius:16px;padding:22px 22px 18px;background:linear-gradient(180deg,rgba(95,246,255,.12),rgba(95,246,255,.04));color:#d8fdff;text-shadow:0 0 8px rgba(95,246,255,.55);box-shadow:0 0 40px rgba(95,246,255,.22),inset 0 0 40px rgba(95,246,255,.08);overflow:hidden;transform-origin:50% 100%}
+.hp::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(95,246,255,.09) 0 1px,transparent 1px 3px);animation:flick 5s steps(1) infinite}
+.hp::before{content:"";position:absolute;left:0;right:0;top:-30%;height:30%;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(95,246,255,.16),transparent);animation:sweep 5s linear infinite}
+.hp.on{animation:materialize 1.3s cubic-bezier(.2,.8,.2,1) both}
+.hcap{font:500 13px "Space Grotesk",sans-serif;letter-spacing:.04em;color:var(--holo);margin:0}
+.top{font:700 clamp(50px,7vw,80px)/1.02 "Space Grotesk",sans-serif;letter-spacing:-.03em;white-space:nowrap;color:#f2feff;margin:4px 0 2px}
+.top small{font-size:.3em;margin-right:6px;font-family:"Noto Sans JP",sans-serif;font-weight:700}
+.est{font-size:13px;color:var(--amber);text-shadow:none;margin:0}
+.lvn{font-weight:900;font-size:clamp(22px,2.8vw,28px);margin:10px 0 0;line-height:1.3}
+.meta{font:500 14px "Space Grotesk","Noto Sans JP",sans-serif;color:#9fefff;margin:0}
+.pyr{display:grid;gap:4px;margin-top:16px}
+.pr{display:grid;grid-template-columns:minmax(0,1fr) 12.5em;gap:10px;align-items:center;font-size:12.5px;opacity:0;transform:translateY(8px);animation:prIn .45s ease forwards}
+@keyframes prIn{to{opacity:1;transform:none}}
+.pr .tier{display:flex;justify-content:center}
+.pr .tier i{display:block;height:17px;border:1px solid rgba(95,246,255,.5);background:rgba(95,246,255,.10);border-radius:3px}
+.pr.me .tier i{background:var(--pink);border-color:var(--pink);box-shadow:0 0 18px var(--pink)}
+.pr .lb{line-height:1.25;color:#bff8ff}
+.pr.me .lb{color:#fff;font-weight:700}
+.pr.me .lb::before{content:"▶ ";color:var(--pink)}
+@keyframes pulse{50%{opacity:.65;transform:scaleX(.96)}}
+@keyframes shimmer{50%{opacity:.6}}
+@keyframes rise{0%{opacity:0;transform:translateY(0)}15%{opacity:1}100%{opacity:0;transform:translateY(-320px)}}
+@keyframes float{50%{transform:translateY(-12px)}}
+@keyframes flick{0%,100%{opacity:1}47%{opacity:.6}48%{opacity:1}83%{opacity:.8}}
+@keyframes sweep{to{transform:translateY(480%)}}
+@keyframes materialize{0%{opacity:0;transform:scaleY(.02) scaleX(.6);filter:blur(8px) brightness(3)}25%{opacity:.8;transform:scaleY(.04) scaleX(1)}55%{opacity:.5;transform:scaleY(1.04);filter:blur(1px) brightness(1.6)}62%{opacity:.9}66%{opacity:.4}72%{opacity:1;transform:scaleY(1);filter:none}}
+.side h2{color:var(--holo)}
 .blk{margin-bottom:22px}
 .blk ul,.blk ol{margin:6px 0 0;padding-left:1.3em}
-.blk li{margin-bottom:4px}
-.warn{background:var(--bg);border-radius:12px;padding:14px 16px;font-size:15px}
+.blk li{margin-bottom:5px}
+.warn{background:var(--glass);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:15px}
 .warn p{margin:0 0 6px}
-.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.msg{font-size:14px;color:var(--mute);margin-top:8px;min-height:1.4em}
-.comm{background:var(--ink);color:var(--bg)}
-.comm .lead{color:color-mix(in srgb,var(--bg) 78%,transparent)}
-.comm .card{background:color-mix(in srgb,var(--bg) 8%,var(--ink));border-color:color-mix(in srgb,var(--bg) 22%,transparent);color:var(--bg)}
-.comm .btn{background:var(--pink);border-color:var(--pink);color:#fff}
-.comm .btn.ghost{background:transparent;border-color:var(--bg);color:var(--bg)}
-.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin-top:22px}
-.cg p{margin:0}
-.intro{font-size:14px;background:color-mix(in srgb,var(--bg) 12%,transparent);border-radius:10px;padding:10px 12px;margin-top:10px;overflow-wrap:anywhere}
-.ladder{display:grid;gap:0;margin-top:18px;border-top:1px solid var(--line)}
-.rung{display:grid;grid-template-columns:11em minmax(0,1fr) 12em;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);align-items:baseline}
-.rung b{font-size:16px}
-.rung span{font-size:15px}
-.rung em{font-style:normal;text-align:right;font-size:13px;color:var(--mute)}
-.rung.me{background:color-mix(in srgb,var(--pink) 10%,transparent);box-shadow:inset 4px 0 0 var(--pink);padding-left:12px}
+.bars{display:grid;gap:9px}
+.bar{display:grid;grid-template-columns:6.5em minmax(0,1fr) 3em;gap:10px;align-items:center;font-size:14px}
+.bar .tr{height:8px;background:var(--t0);border-radius:5px;overflow:hidden}
+.bar .tr div{height:100%;width:0;background:linear-gradient(90deg,var(--t2),var(--holo));box-shadow:0 0 10px var(--holo);border-radius:5px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.bar .v{text-align:right;font-family:"Space Grotesk",sans-serif;white-space:nowrap}
+.mirror{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.mirror .big{font:700 30px "Space Grotesk",sans-serif;color:var(--holo)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0;padding:0;list-style:none}
+.chips li{font-size:13px;padding:3px 10px;border-radius:20px;border:1px solid var(--line);color:var(--mute)}
+.chips li.on{background:rgba(95,246,255,.16);border-color:var(--holo);color:var(--ink)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.msg{font-size:14px;color:var(--mute);margin-top:8px;min-height:1.4em;overflow-wrap:anywhere}
+.panels{display:flex;gap:8px;height:450px;margin-top:24px}
+.pn{flex:1 1 0;position:relative;border:1px solid var(--line);border-radius:16px;background:var(--glass);overflow:hidden;cursor:pointer;transition:flex .5s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s;color:var(--ink)}
+.pn::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(95,246,255,.035) 0 1px,transparent 1px 3px)}
+.pn .tag{position:absolute;top:14px;left:50%;transform:translateX(-50%);font:700 13px "Space Grotesk",sans-serif;padding:3px 10px;border-radius:20px;border:1px solid var(--holo);color:var(--holo);background:rgba(95,246,255,.08);white-space:nowrap;transition:left .4s,transform .4s}
+.pn .vt{position:absolute;top:56px;left:50%;transform:translateX(-50%);writing-mode:vertical-rl;font-weight:700;font-size:16px;letter-spacing:.1em;white-space:nowrap;transition:opacity .25s}
+.pn .vp{position:absolute;bottom:14px;left:4px;right:4px;text-align:center;font:500 12px/1.3 "Space Grotesk",sans-serif;color:var(--mute);transition:opacity .25s}
+.pn .body{position:absolute;inset:56px 22px 18px;opacity:0;transform:translateY(10px);transition:opacity .3s .15s,transform .3s .15s;pointer-events:none;overflow:auto}
+.pn .body h3{font-size:20px;margin:0}
+.pn .body .pp{font:500 13px "Space Grotesk","Noto Sans JP",sans-serif;color:var(--amber);margin:0 0 8px}
+.pn .body p{font-size:14.5px;margin:0 0 10px}
+.pn .body ul{font-size:14px;margin:0 0 8px;padding-left:1.2em}
+.pn .body b{font-size:13px;color:var(--holo)}
+.pn.open{flex:5.5 1 0;border-color:var(--holo);box-shadow:0 0 30px rgba(95,246,255,.2)}
+.pn.open .tag{left:22px;transform:none}
+.pn.open .vt,.pn.open .vp{opacity:0}
+.pn.open .body{opacity:1;transform:none;pointer-events:auto}
+.pn.mine .tag{background:var(--pink);border-color:var(--pink);color:#2a0016}
+.pn.mine.open .tag::after{content:" あなたのレベル"}
+.consult{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,4vw,48px);align-items:center}
+.steps3{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.steps3 li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;align-items:center}
+.steps3 span{width:36px;height:36px;border-radius:50%;border:1px solid var(--holo);display:grid;place-items:center;font:700 15px "Space Grotesk",sans-serif;color:var(--holo)}
+.memo{font-size:14px;background:rgba(3,10,20,.6);border:1px dashed var(--line);border-radius:10px;padding:12px 14px;margin:12px 0 0;overflow-wrap:anywhere;color:var(--mute);white-space:pre-line}
 .scroll{overflow-x:auto;margin-top:16px}
 table{border-collapse:collapse;width:100%;font-size:14.5px}
 th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
 td.num{text-align:right;font-family:"Space Grotesk",sans-serif;white-space:nowrap;font-size:16px}
-.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:20px;border:1px solid currentColor;white-space:nowrap}
-.tag.est{color:var(--pinkink)}
+.tag2{display:inline-block;font-size:12px;padding:1px 8px;border-radius:20px;border:1px solid var(--holo);color:var(--holo);white-space:nowrap}
+.tag2.est{color:var(--amber);border-color:var(--amber)}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px 32px;margin-top:22px;font-size:15px}
 .cols p,.cols ul{margin:0}
 .cols ul{padding-left:1.2em}
+.cols a{color:var(--holo)}
 footer{font-size:14px;color:var(--mute)}
 footer p{margin:0 0 6px}
-@media(prefers-reduced-motion:reduce){.dots i.me{animation:none}.prog div,.opt{transition:none}}
-@media(max-width:860px){.hero,.res{grid-template-columns:minmax(0,1fr)}.rung{grid-template-columns:minmax(0,1fr) auto}.rung span{grid-column:1/-1;order:3}}
-@media(max-width:600px){table{font-size:13px}th,td{padding:7px 4px}.stack thead{display:none}.stack tr{display:grid;padding-block:8px;border-bottom:1px solid var(--line)}.stack td{display:flex;justify-content:space-between;gap:12px;border:0;padding:3px 0}.stack td::before{content:attr(data-l);font-weight:700;flex:none}.dots{gap:3px}.facts li{font-size:13px}}
+.js [data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.js [data-reveal].is-in{opacity:1;transform:none}
+@media(max-width:860px){.hero,.res,.consult{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.panels{flex-direction:column;height:auto}
+.pn{flex:none;min-height:56px}
+.pn .tag{left:16px;top:14px;transform:none}
+.pn .vt{writing-mode:horizontal-tb;top:15px;left:84px;transform:none;font-size:15px;letter-spacing:0}
+.pn .vp{bottom:auto;top:18px;left:auto;right:16px;text-align:right}
+.pn .body{position:relative;inset:auto;max-height:0;padding:0 18px;transition:opacity .3s}
+.pn.open{flex:none}
+.pn.open .tag{left:16px}
+.pn.open .body{max-height:none;padding:56px 18px 18px}}
+@media(max-width:600px){table{font-size:13px}th,td{padding:7px 4px}.stack thead{display:none}.stack tr{display:grid;padding-block:8px;border-bottom:1px solid var(--line)}.stack td{display:flex;justify-content:space-between;gap:12px;border:0;padding:3px 0}.stack td::before{content:attr(data-l);font-weight:700;flex:none}.dots{gap:3px}.pr{grid-template-columns:minmax(0,1fr) 9.6em;font-size:11.5px}.hp{padding:18px 16px 14px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.dots i,.pr{opacity:1;transform:none}.js [data-reveal]{opacity:1;transform:none}}
 </style>
+<script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
+<canvas id="space" aria-hidden="true"></canvas>
+<div class="glow-bg" aria-hidden="true"></div>
+<main>
 
 <section class="band" id="start"><div class="wrap">
-<p class="brand"><a href="./">Abierto Works ｜ AI活用度診断</a><a href="#ladder">レベル早見表</a></p>
+<p class="brand"><a href="./"><b>ABIERTO WORKS</b> ｜ AI活用度診断</a><a href="#levels">レベル早見表</a></p>
 <div class="hero">
 <div>
-<h1>あなたのAI活用度は、<br>日本で上位何%？</h1>
+<h1>あなたのAI活用度は、<br><span class="hl">日本で上位何%？</span></h1>
 <p class="lead">相談相手として使う段階から、サイト制作、エージェント構築まで。あなたの<strong>個人での</strong>AIの使い方を100点満点で採点し、今のレベルでAIにできることと、次の一歩をお伝えします。</p>
 <ul class="facts"><li>全12問・約2分</li><li>登録不要</li><li>回答はどこにも送信されません</li></ul>
 <p class="note"><strong>答え方のルール</strong>：会社から支給されたAIを業務で使っているだけの場合は含めず、<strong>個人として自分で選び、使っているもの</strong>で答えてください。基準は「会社で使われているAIの仕組みを、個人でも使いこなせているか」です。</p>
-<button class="btn pink" type="button" id="go">診断をはじめる</button>
+<button class="btn main" type="button" id="go">診断をはじめる</button>
 </div>
-<div class="card">
+<div class="card scan">
 <p class="cap">日本人（15歳以上）を100人にすると</p>
 <div class="dots" id="d1" role="img" aria-label="日本人100人のAI利用の分布"></div>
 <ul class="legend">
@@ -147,104 +212,125 @@ footer p{margin:0 0 6px}
 </div>
 </div></section>
 
-<section class="band hidden" id="quiz" aria-live="polite">
-<div class="card">
+<section class="band hidden" id="quiz" aria-live="polite"><div class="wrap">
+<div class="card scan">
 <div class="qno"><span id="qn">Q1 / 12</span><span id="qax"></span></div>
 <div class="prog"><div id="pg" style="width:0"></div></div>
 <p class="qt" id="qt"></p>
 <p class="hint" id="qh"></p>
 <div class="opts" id="qo"></div>
 <div class="nav">
-<button class="btn ghost" type="button" id="back">戻る</button>
-<button class="btn" type="button" id="next">次へ</button>
+<button class="btn" type="button" id="back">戻る</button>
+<button class="btn main" type="button" id="next">次へ</button>
 </div>
 </div>
-</section>
+</div></section>
 
 <section class="band hidden" id="result"><div class="wrap">
 <div class="res">
-<div class="card">
-<p class="cap">あなたのAI活用度</p>
+<div>
+<div class="stage" id="stage">
+<div class="base"></div><div class="emitter"></div><div class="cone"></div>
+<div id="motes"></div>
+<div class="holo" id="holo"><div class="float">
+<div class="hp" id="hp">
+<p class="hcap">AI UTILIZATION SCAN ／ あなたのAI活用度</p>
 <div class="top" id="top"></div>
 <p class="est" id="est"></p>
-<p class="lv" id="lv"></p>
+<p class="lvn" id="lvn"></p>
 <p class="meta" id="meta"></p>
-<div class="dots" id="d2" role="img" aria-label="100人の中のあなたの位置" style="margin-top:16px"></div>
+<div class="pyr" id="pyr" role="img" aria-label="レベルのピラミッドとあなたの位置"></div>
+</div>
+</div></div>
+</div>
+<div class="card">
+<p class="cap">5つの力</p>
 <div class="bars" id="bars"></div>
 <div class="mirror">
 <p class="cap">会社で使われているAIの仕組みを、個人で使えている数</p>
 <div class="big" id="mc"></div>
 <ul class="chips" id="mchips"></ul>
 </div>
-<div class="btns">
-<button class="btn" type="button" id="copy">結果をコピー</button>
-<a class="btn ghost" id="share" href="https://twitter.com/intent/tweet">Xでシェア</a>
-<button class="btn ghost" type="button" id="again">もう一度</button>
 </div>
-<p class="msg" id="msg" role="status"></p>
 </div>
-<div>
+<div class="side">
 <div class="blk"><h2 id="who"></h2><p id="whod" style="margin:0"></p></div>
 <div class="blk"><h3>このレベルで、AIにできること</h3><ul id="can"></ul></div>
 <div class="blk"><h3>次の一歩（今日からできる順）</h3><ol id="steps"></ol></div>
 <div class="blk warn"><p><strong>よくあるつまずき</strong></p><p id="fail"></p><p><strong>こうすれば抜けられる：</strong><span id="fix"></span></p></div>
 <div class="blk"><h3>次のレベルに上がると、できるようになること</h3><p id="unlock" style="margin:0"></p></div>
+<div class="btns">
+<button class="btn" type="button" id="copy">結果をコピー</button>
+<a class="btn" id="share" href="https://twitter.com/intent/tweet">Xでシェア</a>
+<button class="btn" type="button" id="again">もう一度</button>
+<a class="btn line" href="https://lin.ee/ouQaJdV" target="_blank" rel="noopener">LINEで個別相談</a>
+</div>
+<p class="msg" id="msg" role="status"></p>
 </div>
 </div>
 </div></section>
 
-<section class="band comm" id="community"><div class="wrap">
-<h2>AIを学んでいる人と、これから学びたい人がつながる場所</h2>
-<p class="lead">一人で調べても、何から手をつければいいか分からないのがAIです。診断のレベルを名札にして、少し先を行く人に聞き、少し後ろの人に教える。そんな学び合いの場をLINEオープンチャットで開いています。</p>
-<div class="cg">
-<div class="card"><h3>学びたい人へ</h3><p>「何に使えばいい？」「この答え合ってる？」を気軽に質問できます。Lv0〜3の方、大歓迎です。</p></div>
-<div class="card"><h3>教えたい・一緒に作りたい人へ</h3><p>Lv4以上の方は、使い方の共有や、サイト・自動化を一緒に作る仲間として参加してください。教えることが一番の上達法です。</p></div>
-<div class="card"><h3 id="ctitle">参加のしかた</h3><p id="ctext">診断結果をコピーして、自己紹介に貼るだけ。匿名のニックネームで参加できます。</p><div class="intro hidden" id="introbox"></div>
-<div class="btns"><a class="btn" id="line" href="#community">LINEオープンチャットに参加</a><button class="btn ghost hidden" type="button" id="copyintro">自己紹介文をコピー</button></div>
-<p class="msg" id="lmsg"></p></div>
-</div>
-</div></section>
-
-<section class="band" id="ladder"><div class="wrap">
+<section class="band" id="levels"><div class="wrap" data-reveal>
 <h2>レベル早見表：AIでできることは、こう広がる</h2>
-<p class="lead">右端は日本（15歳以上）でそのレベル以上にいる人のおおよその割合です。上位7%より上は公的統計がないため推定です。</p>
-<div class="ladder" id="rungs"></div>
+<p class="lead">8つのレベルにカーソルを合わせる（スマホはタップ）と、そのレベルでAIにできることと次の一歩が開きます。診断後は、あなたのレベルが最初から開いています。</p>
+<div class="panels" id="panels"></div>
 </div></section>
 
-<section class="band" id="basis" style="padding-top:0"><div class="wrap">
+<section class="band" id="consult"><div class="wrap consult" data-reveal>
+<div>
+<h2>AIのことを、自分のペースで学びたい方へ</h2>
+<p class="lead">「何から始めればいい？」「自分の仕事にはどう使える？」「サイトや自動化を作ってみたい」。診断の結果をもとに、あなたのレベルに合わせた個別相談を受け付けています。</p>
+<ol class="steps3">
+<li><span>1</span><div>診断を受ける</div></li>
+<li><span>2</span><div>「相談メモをコピー」を押す</div></li>
+<li><span>3</span><div>LINE公式アカウントを友だち追加して、メモを送る</div></li>
+</ol>
+</div>
+<div class="card scan">
+<h3>個別相談（LINE公式アカウント）</h3>
+<p style="margin:0;font-size:15px;color:var(--mute)">相談の進め方は、LINEでご案内します。</p>
+<div class="memo" id="memo">診断を受けると、ここに相談メモが表示されます。</div>
+<div class="btns">
+<a class="btn line" href="https://lin.ee/ouQaJdV" target="_blank" rel="noopener">LINEで友だち追加して相談</a>
+<button class="btn" type="button" id="copymemo">相談メモをコピー</button>
+</div>
+<p class="msg" id="mmsg" role="status"></p>
+</div>
+</div></section>
+
+<section class="band" id="basis"><div class="wrap" data-reveal>
 <h2>「上位◯%」の根拠</h2>
 <p class="lead">公的統計で裏付けられるのは上位7%（コード生成AIの利用経験）まで。それより上は推定なので、細かい数字ではなく幅で表示します。</p>
 <div class="scroll">
 <table class="stack">
 <thead><tr><th>境界</th><th>人口に占める割合</th><th>根拠</th><th>種別</th></tr></thead>
 <tbody>
-<tr><td data-l="境界">生成AIを使ったことがある</td><td class="num" data-l="割合">58.8%</td><td data-l="根拠">総務省『令和8年版 情報通信白書』2025年度個人向け調査（日本・15歳以上）</td><td data-l="種別"><span class="tag">公的データ</span></td></tr>
-<tr><td data-l="境界">ほぼ毎日使う</td><td class="num" data-l="割合">約17.6%</td><td data-l="根拠">同白書「ほぼ毎日利用は約3割」を利用者内の比率とみなし、58.8%×0.3で換算</td><td data-l="種別"><span class="tag est">換算推定</span></td></tr>
-<tr><td data-l="境界">コード生成AIを使ったことがある</td><td class="num" data-l="割合">7.0%</td><td data-l="根拠">同白書 サービス種類別（GitHub Copilot等）</td><td data-l="種別"><span class="tag">公的データ</span></td></tr>
-<tr><td data-l="境界">自動化・エージェントを自作</td><td class="num" data-l="割合">約2%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag est">推定</span></td></tr>
-<tr><td data-l="境界">本番運用・複数エージェント</td><td class="num" data-l="割合">約0.5%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag est">推定</span></td></tr>
-<tr><td data-l="境界">評価・安全性・製品化まで</td><td class="num" data-l="割合">約0.1%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag est">推定</span></td></tr>
+<tr><td data-l="境界">生成AIを使ったことがある</td><td class="num" data-l="割合">58.8%</td><td data-l="根拠">総務省『令和8年版 情報通信白書』2025年度個人向け調査（日本・15歳以上）</td><td data-l="種別"><span class="tag2">公的データ</span></td></tr>
+<tr><td data-l="境界">ほぼ毎日使う</td><td class="num" data-l="割合">約17.6%</td><td data-l="根拠">同白書「ほぼ毎日利用は約3割」を利用者内の比率とみなし、58.8%×0.3で換算</td><td data-l="種別"><span class="tag2 est">換算推定</span></td></tr>
+<tr><td data-l="境界">コード生成AIを使ったことがある</td><td class="num" data-l="割合">7.0%</td><td data-l="根拠">同白書 サービス種類別（GitHub Copilot等）</td><td data-l="種別"><span class="tag2">公的データ</span></td></tr>
+<tr><td data-l="境界">自動化・エージェントを自作</td><td class="num" data-l="割合">約2%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag2 est">推定</span></td></tr>
+<tr><td data-l="境界">複数エージェントの運用</td><td class="num" data-l="割合">約0.5%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag2 est">推定</span></td></tr>
+<tr><td data-l="境界">評価・安全性・製品化まで</td><td class="num" data-l="割合">約0.1%</td><td data-l="根拠">公的統計なし</td><td data-l="種別"><span class="tag2 est">推定</span></td></tr>
 </tbody></table>
 </div>
 <div class="cols">
 <div><h3>採点の考え方</h3><p>頻度・伝える力・見極める力・任せる力・つくる力の5つの軸で採点します。軸は、Rick Dakan氏とJoseph Feller氏によるAI Fluencyフレームワークの考え方（任せる・伝える・見極める・責任をもつ）を参考にしました。点数の節目に上の境界を置き、間は対数で補間しています。さらに「関門」として、毎日使っていなければ上位20%、コードに触れていなければ上位8%、自動化やエージェントの経験がなければ上位2.5%、AIが動く仕組みの運用経験がなければ上位1%、評価・安全性まで扱っていなければ上位0.2%より上には行きません。</p></div>
-<div><h3>この診断の限界</h3><ul><li>自己申告なので、甘めに答えると上振れします。</li><li>配点はAbierto Worksが設計したもので、統計的に検証された尺度ではありません。</li><li>白書の「ほぼ毎日 約3割」は母数が本文で明記されておらず、換算に不確実さがあります。</li></ul></div>
+<div><h3>この診断の限界</h3><ul><li>自己申告なので、甘めに答えると上振れします。</li><li>配点はアビエルトワークスが設計したもので、統計的に検証された尺度ではありません。</li><li>白書の「ほぼ毎日 約3割」は母数が本文で明記されておらず、換算に不確実さがあります。</li></ul></div>
 <div><h3>出典</h3><ul><li><a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r08/pdf/n1110000.pdf">総務省 令和8年版 情報通信白書 第1部第1章第1節（PDF）</a></li><li><a href="https://www.soumu.go.jp/johotsusintokei/whitepaper/ja/r07/html/nd112210.html">総務省 令和7年版 情報通信白書「個人におけるAI利用の現状」</a></li></ul></div>
 </div>
 </div></section>
+</main>
 
 <footer class="band" style="padding-top:0"><div class="wrap">
-<p>運営：Abierto Works（株式会社Brifu）</p>
+<p>運営：アビエルトワークス</p>
 <p>回答はお使いのブラウザの中だけで計算され、サーバーには送信・保存されません。</p>
 <p>本診断は自己評価の目安です。統計値は2026年11月時点で確認できた公的資料にもとづきます。</p>
 </div></footer>
 
 <script>
 {
-/* ===== 設定：LINEオープンチャットの招待URLをここに入れてください ===== */
-const LINE_URL = "";
-
-const MIRROR = ["有料AIを自分で契約","自分専用の指示・知識を入れたAI","会議・音声の自動議事録","自分の資料を検索して答えるAI","フォーム・メール・表の自動処理","決まった時間に自動で動くAI","外部ツールとつながったAIエージェント","AIで作ったサイト・アプリの公開","AI利用の自分ルール（情報管理）"];
+const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const MIRROR=["有料AIを自分で契約","自分専用の指示・知識を入れたAI","会議・音声の自動議事録","自分の資料を検索して答えるAI","フォーム・メール・表の自動処理","決まった時間に自動で動くAI","外部ツールとつながったAIエージェント","AIで作ったサイト・アプリの公開","AI利用の自分ルール（情報管理）"];
 const Q=[
 {id:"freq",ax:"頻度",t:"個人として、生成AI（ChatGPT・Claude・Geminiなど）をどれくらい使いますか？",o:[["使ったことがない",0],["試したことがある程度",2],["月に数回",4],["週に数回",7],["ほぼ毎日",10],["1日中ずっと開いている",12]]},
 {id:"hours",ax:"頻度",t:"1週間で、合計どれくらい使っていますか？",o:[["1時間未満",0],["1〜5時間",3],["5〜15時間",6],["15〜30時間",8],["30時間以上",10]]},
@@ -257,66 +343,80 @@ const Q=[
 {id:"dev",ax:"つくる力",t:"AIを使って、何かを「つくる」ことはありますか？",o:[["コードやツールづくりはしない",0],["AIが書いたコードを動かしたことがある",3,["code"]],["Claude Code・Cursor等で日常的に開発している",6,["code"]],["AIが中で動く仕組み（チャットボット・自動処理など）を公開・運用している",8,["code","agent","prod"]],["AIの評価・安全性（脱獄対策など）まで扱う",10,["code","agent","prod","eval"]]]},
 {id:"pay",ax:"つくる力",t:"個人としてのAIへの出費は？",o:[["無料のみ",0],["有料プランを1つ",2],["有料プランを複数",4],["API従量課金も含め月1万円以上",6]]},
 {id:"spread",ax:"伝える力",t:"AIの使い方を、誰かに伝えていますか？",o:[["自分だけで使っている",0],["家族や友人に教えたことがある",2],["SNSや勉強会で発信している",4],["講座・コンサル・作品として提供している",6]]},
-{id:"role",ax:null,t:"AIを一緒に学ぶ場があったら、どう関わりたいですか？",h:"採点には含みません。結果の案内に使います",o:[["学びたい",0],["教えたい・一緒に作りたい",0],["どちらも",0],["今は見るだけ",0]]}];
+{id:"topic",ax:null,t:"AIについて、いちばん相談したいことは？",h:"採点には含みません。個別相談のメモに使います",o:[["何から始めればいいか知りたい",0],["仕事や副業で使えるようになりたい",0],["サイトやツールを作ってみたい",0],["自動化やエージェントを作りたい",0],["今は特にない",0]]}];
 const A=[[0,100],[3,58.8],[25,17.6],[45,7],[62,2],[75,.5],[88,.1],[100,.01]];
 const LV=[
-{s:0,n:"Lv0 未接触",p:100,r:"約41%",d:"まだAIに触れていない段階。日本の15歳以上の約4割がここにいます。遅れではなく、これから一番伸びしろがある場所です。",can:["「冷蔵庫に卵と玉ねぎがある。夕飯3案」と聞くと、作り方まで出てくる","長いお知らせを「3行で」と頼むと要約してくれる","言いにくい断りのメッセージを、やわらかい言葉に整えてくれる"],st:["ChatGPT・Claude・Geminiのどれか1つを無料で入れる","今日の困りごとを1つ、話し言葉のまま聞いてみる","答えに「なぜ？」「もっと簡単に」と続けて聞く"],f:"何を聞けばいいか分からず、アプリを入れたまま開かない。",x:"検索窓に打つ言葉の代わりに「〇〇について初心者向けに教えて」と送るだけで十分です。",u:"調べ物や文章の下書きを、検索より速く片付けられるようになります。"},
-{s:1,n:"Lv1 お試し",p:58.8,r:"上位58.8%",d:"触ったことはあるけれど、まだ生活には入っていない段階です。",can:["分からない言葉を、会話しながら自分の理解度に合わせて説明してもらう","メールや案内文の下書きを数秒で作る","写真を見せて「これは何？」「どう直す？」と聞く"],st:["1週間だけ「調べる前にAIに聞く」をルールにする","スマホのホーム画面の1ページ目に置く","音声入力で話しかけてみる"],f:"一度おかしな答えが出て「使えない」と離れてしまう。",x:"聞き方を変えて2〜3回やり直すのが普通です。条件を足すほど精度が上がります。",u:"相談相手として、考えを整理したり比較したりできるようになります。"},
-{s:10,n:"Lv2 相談相手",p:58.8,r:"上位58.8%以内",d:"壁打ち・調べ物の相手としてAIを使えている段階です。",can:["迷っていることを話して、選択肢と判断基準を整理してもらう","商品やプランの比較表を作らせる","旅行・家計・学習の計画を一緒に立てる"],st:["「目的・前提・制約・出力形式」の4点を書いて頼む","最後に「足りない情報があれば先に質問して」と付ける","うまくいった頼み方をメモに保存する"],f:"もっともらしい答えを、そのまま信じてしまう。",x:"数字・固有名詞・法律・医療は、必ず公式サイトなど一次情報で確かめます。",u:"毎日の道具として、資料の読み込みや画像づくりまで任せられます。"},
-{s:22,n:"Lv3 日常ツール",p:17.6,r:"上位17.6%前後（換算推定）",d:"AIが毎日の道具になっている段階。日本では上位2割前後（推定）です。",can:["長いPDFや説明書を読み込ませて、知りたいところだけ質問する","チラシやSNS画像の案を画像生成で何パターンも作る","音声メモから議事録や日記を作る"],st:["自分専用AI（Projects・GPTs・Gem）に、いつもの指示を保存する","NotebookLMなどで自分の資料を検索できるようにする","有料プランを1か月だけ試し、無料版との差を体感する"],f:"ツールを増やしすぎて、どれに何を入れたか分からなくなる。",x:"メインを1つ、用途別を1つに絞り、使う場面を決めます。",u:"仕事の成果物を作り、簡単なコードやページもAIと作れるようになります。"},
-{s:35,n:"Lv4 仕事の相棒",p:17.6,r:"上位7〜17.6%",d:"AIに作業を任せ、成果に結びつけている段階です。",can:["企画書やLPの構成から文章まで、一緒に仕上げる","表計算の関数やデータの傾向分析を任せる","簡単なWebページのコードを書かせて動かす"],st:["AIに1ページのサイトを作らせ、GitHub Pagesなどで公開してみる","毎週くり返す作業を1つ、GASやZapierで自動化する","出力を確かめるチェックリストを作る"],f:"毎回ゼロから頼み、品質も時間も安定しない。",x:"良かったやり取りをテンプレにし、確認項目とセットで使い回します。",u:"サイト・ツール・自動化を自分の手で作れるようになります。"},
-{s:48,n:"Lv5 ビルダー",p:7,r:"上位7%以内",d:"サイト・ツール・自動化を自分で作れる段階。コード生成まで使う人は日本で約7%です。",can:["自分のサイト・診断・ツールを作って公開する","フォーム→表→メールの流れを自動化する","Claude Codeなどでアプリを開発する"],st:["AIを外部サービスとつなぐ（MCP・コネクタ）","決まった時間に自動で動くタスクを1つ作る","作ったものを人に使ってもらい、感想をもらう"],f:"作って満足し、誰にも使われないまま止まる。",x:"作る前に「誰が・いつ使い・誰が直すか」を決めておきます。",u:"AIに道具を持たせ、複数の工程を自律的に進めさせられます。"},
-{s:62,n:"Lv6 エージェント設計者",p:2,r:"上位2%前後（推定）",d:"AIに道具を持たせ、自分の代わりに動かす設計ができる段階です（推定で上位2%前後）。",can:["調査→整理→下書きを、AIが続けて自動で進める","寝ている間に情報収集やレポート作成が終わっている","メール・カレンダー・表計算をまたぐ作業を代行させる"],st:["AIに渡す権限と、人が確認するポイントを決める","出力の合格基準（テスト）を作り、毎回チェックさせる","利用料金とログを見える化する"],f:"任せすぎて、誤送信やデータ消失が起きる。",x:"送信・削除・支払いなど取り消せない操作の前に、人の承認を必ず挟みます。",u:"複数のエージェントを並べて動かし、本番運用まで扱えます。"},
-{s:75,n:"Lv7 ハッカー",p:.5,r:"上位0.5%前後（推定）",d:"複数エージェントの運用や、AIを組み込んだ仕組みの運用まで扱う段階です（推定で上位0.5%前後）。",can:["複数のAIエージェントを並べて動かし、仕事を分担させる","APIで自作の仕組みにAIを組み込む","自分専用の検索AI（RAG）やローカルLLMを構築する"],st:["プロンプトインジェクション（AIへの不正な指示）の対策を入れる","評価（eval）を自動化し、改善を数字で追う","知見を発信し、教える側に回る"],f:"自分しか分からない仕組みになり、止まると誰も直せない。",x:"仕組みの説明書と引き継ぎ手順を書き、他の人が動かせる状態にします。",u:"評価・安全性・製品化まで扱い、他の人の到達点を引き上げる側に回れます。"},
-{s:88,n:"Lv8 フロンティア",p:.1,r:"上位0.1%前後（推定）",d:"評価・安全性・製品化まで踏み込む、ごく少数の段階です（推定で上位0.1%前後）。",can:["AIの出力品質や安全性を、仕組みとして検証する","AIを使ったサービスや講座を提供する","最新の研究や機能を、すぐ実務に落とし込む"],st:["コミュニティで教える側に立つ","作った仕組みや知見をオープンに公開する","Lv0〜2の人にも伝わる言葉で説明する練習をする"],f:"専門用語ばかりになり、これから学ぶ人を置き去りにする。",x:"「冷蔵庫の残り物で献立」くらいの身近な例から話します。",u:"ここが今の最上段です。次は、あなたが誰かの次の一歩をつくる番です。"}];
-
+{s:0,n:"未接触",p:100,r:"約41%",d:"まだAIに触れていない段階。日本の15歳以上の約4割がここにいます。遅れではなく、これから一番伸びしろがある場所です。",can:["「冷蔵庫に卵と玉ねぎがある。夕飯3案」と聞くと、作り方まで出てくる","長いお知らせを「3行で」と頼むと要約してくれる","言いにくい断りのメッセージを、やわらかい言葉に整えてくれる"],st:["ChatGPT・Claude・Geminiのどれか1つを無料で入れる","今日の困りごとを1つ、話し言葉のまま聞いてみる","答えに「なぜ？」「もっと簡単に」と続けて聞く"],f:"何を聞けばいいか分からず、アプリを入れたまま開かない。",x:"検索窓に打つ言葉の代わりに「〇〇について初心者向けに教えて」と送るだけで十分です。",u:"調べ物や文章の下書きを、検索より速く片付けられるようになります。"},
+{s:1,n:"お試し",p:58.8,r:"上位58.8%",d:"触ったことはあるけれど、まだ生活には入っていない段階です。",can:["分からない言葉を、会話しながら自分の理解度に合わせて説明してもらう","メールや案内文の下書きを数秒で作る","写真を見せて「これは何？」「どう直す？」と聞く"],st:["1週間だけ「調べる前にAIに聞く」をルールにする","スマホのホーム画面の1ページ目に置く","音声入力で話しかけてみる"],f:"一度おかしな答えが出て「使えない」と離れてしまう。",x:"聞き方を変えて2〜3回やり直すのが普通です。条件を足すほど精度が上がります。",u:"相談相手として、考えを整理したり比較したりできるようになります。"},
+{s:10,n:"相談相手",p:58.8,r:"上位58.8%以内",d:"壁打ち・調べ物の相手としてAIを使えている段階です。",can:["迷っていることを話して、選択肢と判断基準を整理してもらう","商品やプランの比較表を作らせる","旅行・家計・学習の計画を一緒に立てる"],st:["「目的・前提・制約・出力形式」の4点を書いて頼む","最後に「足りない情報があれば先に質問して」と付ける","うまくいった頼み方をメモに保存する"],f:"もっともらしい答えを、そのまま信じてしまう。",x:"数字・固有名詞・法律・医療は、必ず公式サイトなど一次情報で確かめます。",u:"毎日の道具として、資料の読み込みや画像づくりまで任せられます。"},
+{s:22,n:"日常ツール",p:17.6,r:"上位17.6%前後（推定）",d:"AIが毎日の道具になっている段階。日本では上位2割前後（推定）です。",can:["長いPDFや説明書を読み込ませて、知りたいところだけ質問する","チラシやSNS画像の案を画像生成で何パターンも作る","音声メモから議事録や日記を作る"],st:["自分専用AI（Projects・GPTs・Gem）に、いつもの指示を保存する","NotebookLMなどで自分の資料を検索できるようにする","有料プランを1か月だけ試し、無料版との差を体感する"],f:"ツールを増やしすぎて、どれに何を入れたか分からなくなる。",x:"メインを1つ、用途別を1つに絞り、使う場面を決めます。",u:"仕事の成果物を作り、簡単なコードやページもAIと作れるようになります。"},
+{s:35,n:"仕事の相棒",p:17.6,r:"上位7〜17.6%",d:"AIに作業を任せ、成果に結びつけている段階です。",can:["企画書やLPの構成から文章まで、一緒に仕上げる","表計算の関数やデータの傾向分析を任せる","簡単なWebページのコードを書かせて動かす"],st:["AIに1ページのサイトを作らせ、GitHub Pagesなどで公開してみる","毎週くり返す作業を1つ、GASやZapierで自動化する","出力を確かめるチェックリストを作る"],f:"毎回ゼロから頼み、品質も時間も安定しない。",x:"良かったやり取りをテンプレにし、確認項目とセットで使い回します。",u:"サイト・ツール・自動化を自分の手で作れるようになります。"},
+{s:48,n:"ビルダー",p:7,r:"上位7%以内",d:"サイト・ツール・自動化を自分で作れる段階。コード生成まで使う人は日本で約7%です。",can:["自分のサイト・診断・ツールを作って公開する","フォーム→表→メールの流れを自動化する","Claude Codeなどでアプリを開発する"],st:["AIを外部サービスとつなぐ（MCP・コネクタ）","決まった時間に自動で動くタスクを1つ作る","作ったものを人に使ってもらい、感想をもらう"],f:"作って満足し、誰にも使われないまま止まる。",x:"作る前に「誰が・いつ使い・誰が直すか」を決めておきます。",u:"AIに道具を持たせ、複数の工程を自律的に進めさせられます。"},
+{s:62,n:"エージェント設計者",p:2,r:"上位2%前後（推定）",d:"AIに道具を持たせ、自分の代わりに動かす設計ができる段階です（推定で上位2%前後）。",can:["調査→整理→下書きを、AIが続けて自動で進める","寝ている間に情報収集やレポート作成が終わっている","メール・カレンダー・表計算をまたぐ作業を代行させる"],st:["AIに渡す権限と、人が確認するポイントを決める","出力の合格基準（テスト）を作り、毎回チェックさせる","利用料金とログを見える化する"],f:"任せすぎて、誤送信やデータ消失が起きる。",x:"送信・削除・支払いなど取り消せない操作の前に、人の承認を必ず挟みます。",u:"複数のエージェントを指揮し、本番運用まで扱えます。"},
+{s:75,n:"AIオーケストレーター",p:.5,r:"上位0.5%前後（推定）",d:"複数のAIエージェントを指揮者のように組み合わせ、AIが中で動く仕組みを運用している段階です（推定で上位0.5%前後）。",can:["複数のAIエージェントに役割を分け、並行して仕事を進めさせる","APIで自作の仕組みにAIを組み込み、毎日動かす","自分専用の検索AI（RAG）やローカルLLMを構築する"],st:["プロンプトインジェクション（AIへの不正な指示）の対策を入れる","評価（eval）を自動化し、改善を数字で追う","知見を発信し、教える側に回る"],f:"自分しか分からない仕組みになり、止まると誰も直せない。",x:"仕組みの説明書と引き継ぎ手順を書き、他の人が動かせる状態にします。",u:"評価・安全性・製品化まで扱い、他の人の到達点を引き上げる側に回れます。"},
+{s:88,n:"フロンティア",p:.1,r:"上位0.1%前後（推定）",d:"評価・安全性・製品化まで踏み込む、ごく少数の段階です（推定で上位0.1%前後）。",can:["AIの出力品質や安全性を、仕組みとして検証する","AIを使ったサービスや講座を提供する","最新の研究や機能を、すぐ実務に落とし込む"],st:["教える側に立ち、後から来る人の道をつくる","作った仕組みや知見をオープンに公開する","Lv0〜2の人にも伝わる言葉で説明する練習をする"],f:"専門用語ばかりになり、これから学ぶ人を置き去りにする。",x:"「冷蔵庫の残り物で献立」くらいの身近な例から話します。",u:"ここが今の最上段です。次は、あなたが誰かの次の一歩をつくる番です。"}];
+const lvName=i=>`Lv${i} ${LV[i].n}`;
 const $=id=>document.getElementById(id);
-const ans={};let cur=0;
+const ans={};let cur=0,mine=-1;
+
+/* starfield */
+{const c=$("space"),x=c.getContext&&c.getContext("2d");if(x){let W=0,H=0,S=[],run=true;
+const size=()=>{const d=Math.min(2,window.devicePixelRatio||1);W=c.width=innerWidth*d;H=c.height=innerHeight*d;S=Array.from({length:Math.round(innerWidth*innerHeight/6500)},()=>({x:Math.random()*W,y:Math.random()*H,r:(Math.random()*1.3+.3)*d,p:Math.random()*6.3,v:(Math.random()*.15+.03)*d}))};
+const draw=t=>{x.clearRect(0,0,W,H);for(const s of S){const a=.35+.65*Math.abs(Math.sin(s.p+t/1400));x.fillStyle=`rgba(${s.r>1.6?"95,246,255":"232,242,255"},${a})`;x.beginPath();x.arc(s.x,s.y,s.r,0,6.3);x.fill();if(!reduce){s.y-=s.v;if(s.y<0){s.y=H;s.x=Math.random()*W}}}};
+const loop=t=>{if(run)draw(t);requestAnimationFrame(loop)};
+size();addEventListener("resize",size);document.addEventListener("visibilitychange",()=>{run=!document.hidden});
+if(reduce)draw(0);else requestAnimationFrame(loop);}}
+
+/* reveal */
+{const els=document.querySelectorAll("[data-reveal]");if(!("IntersectionObserver" in window)||reduce)els.forEach(e=>e.classList.add("is-in"));else{const io=new IntersectionObserver(en=>en.forEach(e=>{if(e.isIntersecting){e.target.classList.add("is-in");io.unobserve(e.target)}}),{threshold:.08});els.forEach(e=>io.observe(e))}}
+
 const tierA=n=>n<41?"--t0":n<82?"--t1":n<93?"--t2":"--t3";
-const paint=(el,me)=>{el.innerHTML=Array.from({length:100},(_,k)=>`<i class="${k===me?"me":""}" style="background:var(${tierA(k)})"></i>`).join("")};
-paint($("d1"),-1);
+$("d1").innerHTML=Array.from({length:100},(_,k)=>`<i style="background:var(${tierA(k)});animation-delay:${(k%20)*18+Math.floor(k/20)*40}ms"></i>`).join("");
 
-$("rungs").innerHTML=LV.map((l,i)=>`<div class="rung" id="r${i}"><b>${l.n}</b><span>${l.can[0]}。${l.can[1]}。</span><em>${l.r}</em></div>`).join("");
-
-const isSel=(q,j)=>q.multi?(ans[q.id]||[]).includes(j):ans[q.id]===j;
-const render=()=>{
-const q=Q[cur];
-$("qn").textContent=`Q${cur+1} / ${Q.length}`;
-$("qax").textContent=q.ax||"アンケート";
-$("pg").style.width=(cur/Q.length*100)+"%";
-$("qt").textContent=q.t;
-$("qh").textContent=q.h||(q.multi?"":"選ぶと次へ進みます");
-$("qo").innerHTML=q.o.map((o,j)=>`<button type="button" class="opt${q.multi?" multi":""}" data-j="${j}" aria-pressed="${isSel(q,j)}"><span class="mk"></span><span>${o[0]}${o[2]&&typeof o[2]==="string"?`<small>${o[2]}</small>`:""}</span></button>`).join("");
-$("back").disabled=cur===0;
-$("next").textContent=cur===Q.length-1?"結果を見る":"次へ";
-$("next").classList.toggle("hidden",!q.multi&&ans[q.id]===undefined);
-};
-$("qo").addEventListener("click",e=>{
-const b=e.target.closest(".opt");if(!b)return;
-const q=Q[cur],j=+b.dataset.j;
-if(q.multi){const a=ans[q.id]||[];ans[q.id]=a.includes(j)?a.filter(x=>x!==j):[...a,j];render();return}
-ans[q.id]=j;render();
-setTimeout(()=>advance(),220);
+/* 8 panels */
+const P=$("panels");
+P.innerHTML=LV.slice(1).map((l,k)=>{const i=k+1;return`<div class="pn" role="button" tabindex="0" aria-expanded="false" data-i="${i}"><span class="tag">Lv${i}</span><span class="vt">${l.n}</span><span class="vp">${l.r.replace(/（推定）|前後|以内/g,"")}</span><div class="body"><h3>${l.n}</h3><p class="pp">${l.r}</p><p>${l.d}</p><b>AIにできること</b><ul>${l.can.map(c=>`<li>${c}</li>`).join("")}</ul><b>次の一歩</b><ul>${l.st.map(c=>`<li>${c}</li>`).join("")}</ul></div></div>`}).join("");
+const pns=[...P.querySelectorAll(".pn")];
+const openP=i=>pns.forEach(p=>{const on=+p.dataset.i===i;p.classList.toggle("open",on);p.setAttribute("aria-expanded",String(on))});
+const def=()=>mine<1?1:mine;
+openP(def());
+const hoverable=window.matchMedia("(hover:hover) and (min-width:761px)");
+pns.forEach(p=>{
+p.addEventListener("mouseenter",()=>{if(hoverable.matches)openP(+p.dataset.i)});
+p.addEventListener("click",()=>openP(+p.dataset.i));
+p.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openP(+p.dataset.i)}});
 });
+P.addEventListener("mouseleave",()=>{if(hoverable.matches)openP(def())});
+
+/* quiz */
+const isSel=(q,j)=>q.multi?(ans[q.id]||[]).includes(j):ans[q.id]===j;
+const render=()=>{const q=Q[cur];
+$("qn").textContent=`Q${cur+1} / ${Q.length}`;$("qax").textContent=q.ax||"ご相談の参考";
+$("pg").style.width=(cur/Q.length*100)+"%";$("qt").textContent=q.t;
+$("qh").textContent=q.h||(q.multi?"":"選ぶと次へ進みます");
+$("qo").innerHTML=q.o.map((o,j)=>`<button type="button" class="opt${q.multi?" multi":""}" data-j="${j}" aria-pressed="${isSel(q,j)}" style="animation-delay:${j*35}ms"><span class="mk"></span><span>${o[0]}${typeof o[2]==="string"?`<small>${o[2]}</small>`:""}</span></button>`).join("");
+$("back").disabled=cur===0;$("next").textContent=cur===Q.length-1?"結果を見る":"次へ";
+$("next").classList.toggle("hidden",!q.multi&&ans[q.id]===undefined)};
+const setPress=()=>{const q=Q[cur];$("qo").querySelectorAll(".opt").forEach(b=>{b.setAttribute("aria-pressed",String(isSel(q,+b.dataset.j)));b.style.animation="none"})};
 const advance=()=>{if(cur<Q.length-1){cur++;render();$("quiz").scrollIntoView({block:"start"})}else finish()};
+$("qo").addEventListener("click",e=>{const b=e.target.closest(".opt");if(!b)return;const q=Q[cur],j=+b.dataset.j;
+if(q.multi){const a=ans[q.id]||[];ans[q.id]=a.includes(j)?a.filter(v=>v!==j):[...a,j];setPress();return}
+ans[q.id]=j;setPress();setTimeout(advance,240)});
 $("next").addEventListener("click",()=>{const q=Q[cur];if(q.multi&&!ans[q.id])ans[q.id]=[];advance()});
 $("back").addEventListener("click",()=>{if(cur>0){cur--;render()}});
 $("go").addEventListener("click",()=>{$("start").classList.add("hidden");$("result").classList.add("hidden");$("quiz").classList.remove("hidden");cur=0;render();$("quiz").scrollIntoView({block:"start"})});
 $("again").addEventListener("click",()=>{Object.keys(ans).forEach(k=>delete ans[k]);$("result").classList.add("hidden");$("start").classList.remove("hidden");$("start").scrollIntoView({block:"start"})});
 
+/* scoring */
 const interp=s=>{for(let i=1;i<A.length;i++){if(s<=A[i][0]){const[a,pa]=A[i-1],[b,pb]=A[i];const t=(s-a)/(b-a);return Math.exp(Math.log(pa)+t*(Math.log(pb)-Math.log(pa)))}}return .01};
 const fmt=p=>p>=10?p.toFixed(0):p.toFixed(1);
-let shareText="",introText="";
-
-const score=()=>{
-let raw=0,max=0;const ax={},axm={};const flags=new Set();
+const score=()=>{let raw=0,max=0;const ax={},axm={},flags=new Set();
 Q.forEach(q=>{if(!q.ax)return;const m=q.multi?q.cap:Math.max(...q.o.map(o=>o[1]));max+=m;axm[q.ax]=(axm[q.ax]||0)+m;
 const sel=q.multi?(ans[q.id]||[]):ans[q.id]===undefined?[]:[ans[q.id]];
 let p=sel.reduce((s,j)=>s+q.o[j][1],0);if(q.multi)p=Math.min(p,q.cap);
-sel.forEach(j=>{const o=q.o[j];const fl=Array.isArray(o[2])?o[2]:Array.isArray(o[3])?o[3]:[];fl.forEach(f=>flags.add(f))});
+sel.forEach(j=>{const o=q.o[j];(Array.isArray(o[2])?o[2]:Array.isArray(o[3])?o[3]:[]).forEach(f=>flags.add(f))});
 raw+=p;ax[q.ax]=(ax[q.ax]||0)+p});
-const S=Math.round(raw/max*100);
-const fr=ans.freq??0;
+const S=Math.round(raw/max*100),fr=ans.freq??0;
 let top=fr===0?100:interp(Math.max(S,3));
 if(fr<4)top=Math.max(top,20);
 if(!flags.has("code"))top=Math.max(top,8);
@@ -324,47 +424,49 @@ if(!flags.has("agent"))top=Math.max(top,2.5);
 if(!flags.has("prod"))top=Math.max(top,1);
 if(!flags.has("eval"))top=Math.max(top,.2);
 let li=fr===0?0:LV.reduce((a,l,i)=>S>=l.s&&i>0?i:a,1);
-while(li>0&&LV[li].p<top-1e-9&&li>1)li--;
-return {S,top,ax,axm,li,fr};
-};
+while(li>1&&LV[li].p<top-1e-9)li--;
+return{S,top,ax,axm,li,fr}};
 
+/* hologram */
+const stage=$("stage"),holo=$("holo");
+$("motes").innerHTML=reduce?"":Array.from({length:14},(_,k)=>`<i class="mote" style="left:${30+((k*37)%40)}%;animation-delay:${(k*.29).toFixed(2)}s;animation-duration:${(3+(k%5)*.6).toFixed(1)}s"></i>`).join("");
+stage.addEventListener("pointermove",e=>{if(reduce)return;const r=stage.getBoundingClientRect();const px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;holo.style.setProperty("--ry",(px*14).toFixed(1)+"deg");holo.style.setProperty("--rx",(8-py*10).toFixed(1)+"deg")});
+stage.addEventListener("pointerleave",()=>{holo.style.setProperty("--ry","0deg");holo.style.setProperty("--rx","8deg")});
+
+let shareText="",memoText="";
 const finish=()=>{
-const r=score();const L=LV[r.li];
+const r=score(),L=LV[r.li];mine=r.li;
 const band=r.fr===0?null:r.top>=7?null:r.top>=2?"2〜7%":r.top>=.5?"0.5〜2%":r.top>=.1?"0.1〜0.5%":"0.1%以内";
 const ptxt=r.fr===0?"未使用層（約41%）":band?`上位${band}（推定）`:`上位${fmt(r.top)}%`;
 $("top").innerHTML=r.fr===0?"<small>未使用層</small>41%":`<small>上位</small>${band||fmt(r.top)+"%"}`;
 $("est").textContent=band?"公的統計がない推定ゾーンのため、幅で表示しています":(r.fr!==0&&r.top<17.6&&r.top>=7)?"17.6%の線は白書からの換算推定を含みます":"";
-$("lv").textContent=L.n;
-$("meta").textContent=`スコア ${r.S} / 100`;
-const rank=r.fr===0?20:Math.min(99,Math.max(0,Math.round(100-r.top)));
-paint($("d2"),rank);
-$("bars").innerHTML=Object.keys(r.axm).map(k=>{const v=Math.round(r.ax[k]/r.axm[k]*100);return`<div class="bar"><span>${k}</span><div class="tr"><div style="width:${v}%"></div></div><span class="v">${v}%</span></div>`}).join("");
+$("lvn").textContent=lvName(r.li);
+$("pyr").innerHTML=LV.map((l,i)=>i).reverse().map((i,k)=>`<div class="pr${i===r.li?" me":""}" style="animation-delay:${600+k*80}ms"><div class="tier"><i style="width:${16+(8-i)*10.5}%"></i></div><span class="lb">Lv${i} ${LV[i].n}</span></div>`).join("");
+const hp=$("hp");hp.classList.remove("on");void hp.offsetWidth;if(!reduce)hp.classList.add("on");
+const m=$("meta");
+if(reduce)m.textContent=`SCORE ${r.S} / 100`;else{const t0=performance.now();const tick=t=>{const k=Math.min(1,Math.max(0,(t-t0)/1400));m.textContent=`SCORE ${Math.round(r.S*(1-(1-k)**3))} / 100`;if(k<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)}
+$("bars").innerHTML=Object.keys(r.axm).map(k=>{const v=Math.round(r.ax[k]/r.axm[k]*100);return`<div class="bar"><span>${k}</span><div class="tr"><div data-w="${v}"></div></div><span class="v">${v}%</span></div>`}).join("");
+setTimeout(()=>$("bars").querySelectorAll("[data-w]").forEach(d=>{d.style.width=d.dataset.w+"%"}),reduce?0:500);
 const mm=ans.mirror||[];
 $("mc").textContent=`${mm.length} / ${MIRROR.length}`;
-$("mchips").innerHTML=MIRROR.map((m,i)=>`<li class="${mm.includes(i)?"on":""}">${m}</li>`).join("");
-$("who").textContent=L.n;$("whod").textContent=L.d;
+$("mchips").innerHTML=MIRROR.map((v,i)=>`<li class="${mm.includes(i)?"on":""}">${v}</li>`).join("");
+$("who").textContent=lvName(r.li);$("whod").textContent=L.d;
 $("can").innerHTML=L.can.map(c=>`<li>${c}</li>`).join("");
 $("steps").innerHTML=L.st.map(c=>`<li>${c}</li>`).join("");
 $("fail").textContent=L.f;$("fix").textContent=L.x;$("unlock").textContent=L.u;
-document.querySelectorAll(".rung").forEach((el,i)=>el.classList.toggle("me",i===r.li));
+pns.forEach(p=>p.classList.toggle("mine",+p.dataset.i===r.li));openP(def());
 const url=location.href.split("#")[0];
-shareText=`AI活用度診断の結果：${L.n}／スコア${r.S}点／日本（15歳以上）で${ptxt}`;
+shareText=`AI活用度診断の結果：${lvName(r.li)}／スコア${r.S}点／日本（15歳以上）で${ptxt}`;
 $("share").href="https://twitter.com/intent/tweet?text="+encodeURIComponent(shareText)+"&url="+encodeURIComponent(url);
-const role=["学ぶ側","教える側・一緒に作る側","学ぶ側と教える側の両方","まずは見学"][ans.role??3];
-introText=`はじめまして！AI活用度診断は「${L.n}」（${ptxt}）でした。${role}として参加します。よろしくお願いします。`;
-$("ctitle").textContent="あなたの自己紹介文";
-$("ctext").textContent="下の文をコピーして、参加後の自己紹介に貼ってください。";
-$("introbox").textContent=introText;$("introbox").classList.remove("hidden");$("copyintro").classList.remove("hidden");
+const topic=Q[11].o[ans.topic??4][0];
+memoText=`【AI活用度診断の結果】${lvName(r.li)}（${ptxt}・スコア${r.S}点）\n会社の仕組みを個人で使えている数：${mm.length}/9\n相談したいこと：${topic}`;
+$("memo").textContent=memoText;
 $("pg").style.width="100%";
 $("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("result").scrollIntoView({block:"start"});
 };
-
-const copy=async(t,el)=>{try{await navigator.clipboard.writeText(t);el.textContent="コピーしました"}catch(e){el.textContent=t}};
-$("copy").addEventListener("click",()=>copy(shareText,$("msg")));
-$("copyintro").addEventListener("click",()=>copy(introText,$("lmsg")));
-const line=$("line");
-if(LINE_URL){line.href=LINE_URL;line.target="_blank";line.rel="noopener"}
-else{line.removeAttribute("href");line.setAttribute("aria-disabled","true");line.style.opacity=".5";line.textContent="LINEオープンチャット（近日公開）";$("lmsg").textContent="参加URLは準備中です。公開までもう少しお待ちください。"}
+const copy=async(t,el,ok)=>{if(!t){el.textContent="先に診断を受けてください";return}try{await navigator.clipboard.writeText(t);el.textContent=ok}catch(e){el.textContent=t}};
+$("copy").addEventListener("click",()=>copy(shareText,$("msg"),"コピーしました"));
+$("copymemo").addEventListener("click",()=>copy(memoText,$("mmsg"),"コピーしました。LINEに貼り付けて送ってください"));
 }
 </script>
 </body>
