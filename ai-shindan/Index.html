@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{--ink:#17212b;--muted:#65717d;--line:#dce2e8;--bg:#f4f6f8;--accent:#b68a45;--navy:#142638}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;line-height:1.65}
+    .wrap{max-width:820px;margin:0 auto;padding:28px 16px 64px}.hero{background:linear-gradient(135deg,#fff,#edf1f4);border:1px solid var(--line);border-radius:22px;padding:30px;margin-bottom:18px}
+    .eyebrow{letter-spacing:.18em;color:var(--accent);font-size:12px;font-weight:700}.hero h1{font-size:clamp(28px,6vw,42px);line-height:1.2;margin:10px 0}.hero p{color:var(--muted);margin:10px 0 0}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin:14px 0}.panel h2{font-size:18px;margin:0 0 14px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+    input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px;background:#fff;color:var(--ink)}
+    .qhead{display:flex;gap:10px;align-items:flex-start}.num{flex:0 0 32px;height:32px;border-radius:50%;background:#edf1f4;color:var(--navy);display:grid;place-items:center;font-weight:700}
+    .qtitle{font-weight:700;margin:2px 0 12px}.option{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1px solid var(--line);border-radius:11px;margin:8px 0;cursor:pointer}
+    .option:has(input:checked){border-color:var(--accent);background:#fbf8f2}.option input{width:auto;margin-top:5px;accent-color:var(--accent)}
+    .progress{height:7px;background:#e7ebef;border-radius:99px;overflow:hidden;margin:12px 0}.bar{height:100%;width:0;background:var(--accent);transition:width .2s}
+    button{border:0;border-radius:12px;background:var(--navy);color:white;padding:15px 22px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:16px}
+    button:disabled{opacity:.55;cursor:wait}.note{font-size:12px;color:var(--muted)}.hidden{display:none}
+    .result{text-align:center;padding:28px}.score{font-size:64px;font-weight:800;line-height:1.1;color:var(--navy)}.level{font-size:21px;font-weight:700;margin:10px 0}
+    .meter{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:9px 0;text-align:left}.meter b{font-variant-numeric:tabular-nums}
+    .success{color:#23634c;font-weight:700}.error{color:#a43c36;font-weight:700}
+    @media(max-width:600px){.grid{grid-template-columns:1fr}.hero{padding:22px}.panel{padding:17px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">AI EVOLUTION / BUSINESS EDITION</div>
+    <h1>AI活用レベル診断</h1>
+    <p>あなたのAI活用は、どの段階にある？<br>12問の回答から、活用レベル・得意領域・伸ばすべき能力を分析します。</p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="note" id="progressText">回答済み 0 / 12 問</div>
+  </header>
+
+  <section class="panel" id="profile">
+    <h2>あなたについて</h2>
+    <div class="grid">
+      <div class="field"><label>お名前（任意）</label><input id="name" maxlength="100" placeholder="例：山田 太郎"></div>
+      <div class="field"><label>職業</label><select id="job"><option value="">選択してください</option><option>経営者・役員</option><option>会社員</option><option>個人事業主・フリーランス</option><option>専門職・士業</option><option>学生</option><option>その他</option></select></div>
+      <div class="field"><label>業種</label><select id="industry"><option value="">選択してください</option><option>IT・情報通信</option><option>製造・建設</option><option>医療・福祉</option><option>教育・研修</option><option>美容・健康</option><option>小売・飲食・サービス</option><option>金融・不動産</option><option>広告・デザイン・メディア</option><option>その他</option></select></div>
+      <div class="field"><label>役職</label><select id="position"><option value="">選択してください</option><option>経営者・代表</option><option>役員・管理職</option><option>一般社員</option><option>個人事業主</option><option>その他</option></select></div>
+      <div class="field"><label>企業規模</label><select id="companySize"><option value="">選択してください</option><option>個人・フリーランス</option><option>2〜9名</option><option>10〜49名</option><option>50〜299名</option><option>300名以上</option><option>該当なし</option></select></div>
+      <div class="field"><label>年代</label><select id="ageBand"><option value="">選択してください</option><option>20代以下</option><option>30代</option><option>40代</option><option>50代</option><option>60代以上</option><option>回答しない</option></select></div>
+    </div>
+    <p class="note">※属性情報は傾向分析用です。名前は任意です。機密情報・顧客個人情報は入力しないでください。</p>
+  </section>
+
+  <main id="questions"></main>
+  <section class="panel">
+    <p class="note">回答内容は、診断結果の算出とスプレッドシートへの集計に使用します。全国代表調査ではないため、日本人全体の上位何％という順位は表示しません。</p>
+    <button id="submit" onclick="submitAnswers()">診断結果を見る</button>
+    <div id="status" aria-live="polite"></div>
+  </section>
+
+  <section class="panel result hidden" id="result">
+    <div class="eyebrow">YOUR AI EVOLUTION</div>
+    <div class="score"><span id="score">0</span><small style="font-size:20px"> / 100</small></div>
+    <div class="level" id="level"></div>
+    <p>あなたの活用タイプ</p><h2 id="type"></h2>
+    <h2 style="text-align:left;margin-top:26px">4つの能力バランス</h2>
+    <div id="domains"></div>
+    <p class="note" style="text-align:left;margin-top:18px">このスコアは本診断の回答基準に基づく評価であり、日本全国の順位や公的資格を示すものではありません。レベル4以上は自動化・連携、レベル5以上はエージェント運用など、該当する実践条件も満たす必要があります。</p>
+    <button onclick="location.reload()">もう一度診断する</button>
+  </section>
+</div>
+<script>
+const qs = [
+ ['AIをどのくらいの頻度で使っていますか？',['ほとんど使っていない','月に数回、試す程度','週に1〜2回使う','ほぼ毎日使う','毎日、複数の業務で使い分けている']],
+ ['AIをどのような用途で使っていますか？',['使ったことがない','質問・検索・相談が中心','文章作成や要約など、1〜2用途で使う','企画・分析・資料・画像など複数用途で使う','業務の目的に応じて用途やAIを体系的に使い分けている']],
+ ['AIに対して、どの程度具体的な指示を出せますか？',['思いついたことを短く入力する程度','目的や質問を伝えられる','背景・条件・希望する形式を伝えられる','役割・制約・評価基準・出力形式を整理して指示できる','試行結果を評価し、指示を改善して安定した成果を引き出せる']],
+ ['AIを使って、仕事で使える成果物を作っていますか？',['仕事では使っていない','試しに文章などを作ったことがある','メール・文章・議事録などを自分で作成できる','提案書・企画書・画像・コードなどを実務で継続利用している','品質基準を設け、修正・検証を含めて成果物を安定運用している']],
+ ['AIによって、業務時間やコストを削減できていますか？',['効果を感じていない／測っていない','一部の作業で少し便利になった','特定業務の時間短縮を実感している','削減時間や工数を把握し、複数業務で活用している','業務プロセスを再設計し、効果を継続的に測定・改善している']],
+ ['AIをデータ分析や意思決定に活用していますか？',['活用していない','一般的な意見やアイデアを聞く','手元のデータを整理・要約させる','データの傾向・比較・仮説を分析し、判断材料にしている','分析方法や根拠を検証し、意思決定プロセスに組み込んでいる']],
+ ['複数のAIツールを、目的に応じて使い分けていますか？',['1つも使っていない','複数知っているが、ほぼ使い分けていない','用途に応じて2種類程度を使い分ける','複数のAIを工程ごとに使い分けている','各AIの得意不得意を踏まえ、最適な役割分担を設計している']],
+ ['AIと外部サービス（スプレッドシート、フォーム、CRM等）を連携していますか？',['連携していない','連携機能を知っている／試したことがある','既存の連携機能やノーコード連携を使っている','複数サービス間でデータを自動連携している','業務要件に合わせて連携フローを設計・保守している']],
+ ['AIエージェントに複数工程の仕事を任せていますか？',['使ったことがない','単発の自動実行を試したことがある','決まった作業を1工程、自動実行している','調査・整理・作成など複数工程を連続実行させている','権限・確認ポイント・失敗時の処理を設計し、継続運用している']],
+ ['AIを使ってWebサイト・アプリ・業務システムを開発していますか？',['開発していない','AIにコードを書かせたことがある','既存コードの修正や簡単なページを作れる','Webアプリや業務ツールを自分で構築・公開している','要件定義・テスト・改善・運用まで一貫して行っている']],
+ ['API・Python・データベースなどの技術をAIと組み合わせて使えますか？',['使ったことがない','用語や仕組みを知っている','サンプルを参考にAPIやコードを動かせる','API・コード・DBを組み合わせて実装できる','認証・例外処理・ログ・セキュリティも考慮して設計できる']],
+ ['AIの仕組み・出力検証・セキュリティについて、どの程度扱えますか？',['意識したことがない','AIの限界や誤回答があることを知っている','出典確認や個人情報への配慮を行っている','評価方法・情報管理・脆弱性などを具体的に検証している','モデルやシステムの評価・安全性検証を設計し、改善に活かしている']]
+];
+const weights=[5,5,10,10,10,10,8,10,12,8,6,6];
+const root=document.getElementById('questions');
+qs.forEach((q,i)=>{
+ const sec=document.createElement('section');sec.className='panel';
+ sec.innerHTML=`<div class="qhead"><div class="num">${i+1}</div><div class="qtitle">${q[0]}</div></div>`+
+ q[1].map((label,n)=>`<label class="option"><input type="radio" name="q${i+1}" value="${n}"><span>${label}</span></label>`).join('');
+ root.appendChild(sec);
+});
+function updateProgress(){
+ const done=qs.filter((_,i)=>document.querySelector(`input[name="q${i+1}"]:checked`)).length;
+ document.getElementById('bar').style.width=(done/12*100)+'%';
+ document.getElementById('progressText').textContent=`回答済み ${done} / 12 問`;
+}
+document.addEventListener('change',e=>{if(e.target.matches('input[type=radio]'))updateProgress()});
+function submitAnswers(){
+ const answers={};
+ for(let i=1;i<=12;i++){const v=document.querySelector(`input[name="q${i}"]:checked`);if(!v){document.getElementById('status').innerHTML='<p class="error">12問すべてに回答してください。</p>';document.querySelectorAll('.panel')[i+1].scrollIntoView({behavior:'smooth'});return;}answers['q'+i]=Number(v.value);}
+ const btn=document.getElementById('submit');btn.disabled=true;btn.textContent='診断中...';
+ document.getElementById('status').textContent='回答を保存しています。';
+ const payload={answers};
+ ['name','job','industry','position','companySize','ageBand'].forEach(k=>payload[k]=document.getElementById(k).value);
+ google.script.run.withSuccessHandler(showResult).withFailureHandler(err=>{
+   btn.disabled=false;btn.textContent='診断結果を見る';
+   const message=document.createElement('p');message.className='error';
+   message.textContent='保存に失敗しました：'+(err.message||err);
+   document.getElementById('status').replaceChildren(message);
+ }).submitDiagnosis(payload);
+}
+function showResult(r){
+ document.getElementById('profile').classList.add('hidden');root.classList.add('hidden');
+ document.getElementById('submit').classList.add('hidden');document.getElementById('status').classList.add('hidden');
+ document.getElementById('score').textContent=r.score;
+ document.getElementById('level').textContent=`LEVEL ${r.level}｜${r.levelName}`;
+ document.getElementById('type').textContent=r.type;
+ const names=[['基礎力','basic',20],['ビジネス実装力','business',30],['自動化・エージェント力','workflow',30],['技術・先端活用力','tech',20]];
+ document.getElementById('domains').innerHTML=names.map(([n,k,max])=>`<div class="meter"><span>${n}</span><b>${r.domains[k]} / ${max}</b></div>`).join('');
+ document.getElementById('result').classList.remove('hidden');document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
